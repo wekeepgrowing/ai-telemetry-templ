@@ -1,0 +1,3201 @@
+Langfuse JS/TS SDKslangfuseLangfuse
+Class Langfuse
+Hierarchy
+LangfuseCore
+Langfuse
+Defined in langfuse/src/langfuse.ts:29
+Constructors
+constructor
+Properties
+additionalHeaders
+api
+baseUrl
+Methods
+_exportLocalEvents
+_getFetchOptions
+_updateGeneration
+_updateSpan
+createDataset
+createDatasetItem
+createDatasetRunItem
+createPrompt
+createPromptStateless
+debug
+event
+fetch
+fetchMedia
+fetchObservation
+fetchObservations
+fetchSessions
+fetchTrace
+fetchTraces
+flush
+flushAsync
+generation
+getCustomUserAgent
+getDataset
+getDatasetItem
+getDatasetRun
+getDatasetRuns
+getLibraryId
+getLibraryVersion
+getPersistedProperty
+getPrompt
+getPromptStateless
+getSdkIntegration
+on
+processQueueItems
+resolveMediaReferences
+score
+setPersistedProperty
+shutdown
+shutdownAsync
+span
+trace
+updatePrompt
+updatePromptStateless
+constructor
+new Langfuse(params?): Langfuse
+Parameters
+Optionalparams: {
+    publicKey?: string;
+    secretKey?: string;
+} & {
+    enabled?: boolean;
+    persistence?:
+        | "localStorage"
+        | "sessionStorage"
+        | "memory"
+        | "cookie";
+    persistence_name?: string;
+} & LangfuseCoreOptions
+Returns Langfuse
+Overrides LangfuseCore.constructor
+
+Defined in langfuse/src/langfuse.ts:35
+additionalHeaders
+additionalHeaders: Record<string, string>
+Inherited from LangfuseCore.additionalHeaders
+
+Defined in langfuse-core/lib/index.d.ts:4650
+api
+api: {
+    commentsCreate: ((data: ApiCreateCommentRequest, params?: RequestParams) => Promise<ApiCreateCommentResponse>);
+    commentsGet: ((query: ApiCommentsGetParams, params?: RequestParams) => Promise<ApiGetCommentsResponse>);
+    commentsGetById: ((commentId: string, params?: RequestParams) => Promise<ApiComment>);
+    datasetItemsCreate: ((data: ApiCreateDatasetItemRequest, params?: RequestParams) => Promise<ApiDatasetItem>);
+    datasetItemsGet: ((id: string, params?: RequestParams) => Promise<ApiDatasetItem>);
+    datasetItemsList: ((query: ApiDatasetItemsListParams, params?: RequestParams) => Promise<ApiPaginatedDatasetItems>);
+    datasetRunItemsCreate: ((data: ApiCreateDatasetRunItemRequest, params?: RequestParams) => Promise<ApiDatasetRunItem>);
+    datasetsCreate: ((data: ApiCreateDatasetRequest, params?: RequestParams) => Promise<ApiDataset>);
+    datasetsGet: ((datasetName: string, params?: RequestParams) => Promise<ApiDataset>);
+    datasetsGetRun: ((datasetName: string, runName: string, params?: RequestParams) => Promise<ApiDatasetRunWithItems>);
+    datasetsGetRuns: ((__namedParameters: ApiDatasetsGetRunsParams, params?: RequestParams) => Promise<ApiPaginatedDatasetRuns>);
+    datasetsList: ((query: ApiDatasetsListParams, params?: RequestParams) => Promise<ApiPaginatedDatasets>);
+    healthHealth: ((params?: RequestParams) => Promise<ApiHealthResponse>);
+    ingestionBatch: ((data: ApiIngestionBatchPayload, params?: RequestParams) => Promise<ApiIngestionResponse>);
+    mediaGet: ((mediaId: string, params?: RequestParams) => Promise<ApiGetMediaResponse>);
+    mediaGetUploadUrl: ((data: ApiGetMediaUploadUrlRequest, params?: RequestParams) => Promise<ApiGetMediaUploadUrlResponse>);
+    mediaPatch: ((mediaId: string, data: ApiPatchMediaBody, params?: RequestParams) => Promise<void>);
+    metricsDaily: ((query: ApiMetricsDailyParams, params?: RequestParams) => Promise<ApiDailyMetrics>);
+    modelsCreate: ((data: ApiCreateModelRequest, params?: RequestParams) => Promise<ApiModel>);
+    modelsDelete: ((id: string, params?: RequestParams) => Promise<void>);
+    modelsGet: ((id: string, params?: RequestParams) => Promise<ApiModel>);
+    modelsList: ((query: ApiModelsListParams, params?: RequestParams) => Promise<ApiPaginatedModels>);
+    observationsGet: ((observationId: string, params?: RequestParams) => Promise<ApiObservationsView>);
+    observationsGetMany: ((query: ApiObservationsGetManyParams, params?: RequestParams) => Promise<ApiObservationsViews>);
+    projectsGet: ((params?: RequestParams) => Promise<ApiProjects>);
+    promptsCreate: ((data: ApiCreatePromptRequest, params?: RequestParams) => Promise<ApiPrompt>);
+    promptsGet: ((__namedParameters: ApiPromptsGetParams, params?: RequestParams) => Promise<ApiPrompt>);
+    promptsList: ((query: ApiPromptsListParams, params?: RequestParams) => Promise<ApiPromptMetaListResponse>);
+    promptVersionUpdate: ((name: string, version: number, data: ApiPromptVersionUpdatePayload, params?: RequestParams) => Promise<ApiPrompt>);
+    scoreConfigsCreate: ((data: ApiCreateScoreConfigRequest, params?: RequestParams) => Promise<ApiScoreConfig>);
+    scoreConfigsGet: ((query: ApiScoreConfigsGetParams, params?: RequestParams) => Promise<ApiScoreConfigs>);
+    scoreConfigsGetById: ((configId: string, params?: RequestParams) => Promise<ApiScoreConfig>);
+    scoreCreate: ((data: ApiCreateScoreRequest, params?: RequestParams) => Promise<ApiCreateScoreResponse>);
+    scoreDelete: ((scoreId: string, params?: RequestParams) => Promise<void>);
+    scoreGet: ((query: ApiScoreGetParams, params?: RequestParams) => Promise<ApiGetScoresResponse>);
+    scoreGetById: ((scoreId: string, params?: RequestParams) => Promise<ApiScore>);
+    sessionsGet: ((sessionId: string, params?: RequestParams) => Promise<ApiSessionWithTraces>);
+    sessionsList: ((query: ApiSessionsListParams, params?: RequestParams) => Promise<ApiPaginatedSessions>);
+    traceGet: ((traceId: string, params?: RequestParams) => Promise<ApiTraceWithFullDetails>);
+    traceList: ((query: ApiTraceListParams, params?: RequestParams) => Promise<ApiTraces>);
+}
+Type declaration
+commentsCreate: ((data: ApiCreateCommentRequest, params?: RequestParams) => Promise<ApiCreateCommentResponse>)
+Description
+Create a comment. Comments may be attached to different object types (trace, observation, session, prompt).
+
+Tags
+Comments
+
+Name
+CommentsCreate
+
+Request
+POST:/api/public/comments
+
+Secure
+(data, params?): Promise<ApiCreateCommentResponse>
+Parameters
+data: ApiCreateCommentRequest
+params: RequestParams = {}
+Returns Promise<ApiCreateCommentResponse>
+commentsGet: ((query: ApiCommentsGetParams, params?: RequestParams) => Promise<ApiGetCommentsResponse>)
+Description
+Get all comments
+
+Tags
+Comments
+
+Name
+CommentsGet
+
+Request
+GET:/api/public/comments
+
+Secure
+(query, params?): Promise<ApiGetCommentsResponse>
+Parameters
+query: ApiCommentsGetParams
+params: RequestParams = {}
+Returns Promise<ApiGetCommentsResponse>
+commentsGetById: ((commentId: string, params?: RequestParams) => Promise<ApiComment>)
+Description
+Get a comment by id
+
+Tags
+Comments
+
+Name
+CommentsGetById
+
+Request
+GET:/api/public/comments/{commentId}
+
+Secure
+(commentId, params?): Promise<ApiComment>
+Parameters
+commentId: string
+params: RequestParams = {}
+Returns Promise<ApiComment>
+datasetItemsCreate: ((data: ApiCreateDatasetItemRequest, params?: RequestParams) => Promise<ApiDatasetItem>)
+Description
+Create a dataset item
+
+Tags
+DatasetItems
+
+Name
+DatasetItemsCreate
+
+Request
+POST:/api/public/dataset-items
+
+Secure
+(data, params?): Promise<ApiDatasetItem>
+Parameters
+data: ApiCreateDatasetItemRequest
+params: RequestParams = {}
+Returns Promise<ApiDatasetItem>
+datasetItemsGet: ((id: string, params?: RequestParams) => Promise<ApiDatasetItem>)
+Description
+Get a dataset item
+
+Tags
+DatasetItems
+
+Name
+DatasetItemsGet
+
+Request
+GET:/api/public/dataset-items/{id}
+
+Secure
+(id, params?): Promise<ApiDatasetItem>
+Parameters
+id: string
+params: RequestParams = {}
+Returns Promise<ApiDatasetItem>
+datasetItemsList: ((query: ApiDatasetItemsListParams, params?: RequestParams) => Promise<ApiPaginatedDatasetItems>)
+Description
+Get dataset items
+
+Tags
+DatasetItems
+
+Name
+DatasetItemsList
+
+Request
+GET:/api/public/dataset-items
+
+Secure
+(query, params?): Promise<ApiPaginatedDatasetItems>
+Parameters
+query: ApiDatasetItemsListParams
+params: RequestParams = {}
+Returns Promise<ApiPaginatedDatasetItems>
+datasetRunItemsCreate: ((data: ApiCreateDatasetRunItemRequest, params?: RequestParams) => Promise<ApiDatasetRunItem>)
+Description
+Create a dataset run item
+
+Tags
+DatasetRunItems
+
+Name
+DatasetRunItemsCreate
+
+Request
+POST:/api/public/dataset-run-items
+
+Secure
+(data, params?): Promise<ApiDatasetRunItem>
+Parameters
+data: ApiCreateDatasetRunItemRequest
+params: RequestParams = {}
+Returns Promise<ApiDatasetRunItem>
+datasetsCreate: ((data: ApiCreateDatasetRequest, params?: RequestParams) => Promise<ApiDataset>)
+Description
+Create a dataset
+
+Tags
+Datasets
+
+Name
+DatasetsCreate
+
+Request
+POST:/api/public/v2/datasets
+
+Secure
+(data, params?): Promise<ApiDataset>
+Parameters
+data: ApiCreateDatasetRequest
+params: RequestParams = {}
+Returns Promise<ApiDataset>
+datasetsGet: ((datasetName: string, params?: RequestParams) => Promise<ApiDataset>)
+Description
+Get a dataset
+
+Tags
+Datasets
+
+Name
+DatasetsGet
+
+Request
+GET:/api/public/v2/datasets/{datasetName}
+
+Secure
+(datasetName, params?): Promise<ApiDataset>
+Parameters
+datasetName: string
+params: RequestParams = {}
+Returns Promise<ApiDataset>
+datasetsGetRun: ((datasetName: string, runName: string, params?: RequestParams) => Promise<ApiDatasetRunWithItems>)
+Description
+Get a dataset run and its items
+
+Tags
+Datasets
+
+Name
+DatasetsGetRun
+
+Request
+GET:/api/public/datasets/{datasetName}/runs/{runName}
+
+Secure
+(datasetName, runName, params?): Promise<ApiDatasetRunWithItems>
+Parameters
+datasetName: string
+runName: string
+params: RequestParams = {}
+Returns Promise<ApiDatasetRunWithItems>
+datasetsGetRuns: ((__namedParameters: ApiDatasetsGetRunsParams, params?: RequestParams) => Promise<ApiPaginatedDatasetRuns>)
+Description
+Get dataset runs
+
+Tags
+Datasets
+
+Name
+DatasetsGetRuns
+
+Request
+GET:/api/public/datasets/{datasetName}/runs
+
+Secure
+(__namedParameters, params?): Promise<ApiPaginatedDatasetRuns>
+Parameters
+__namedParameters: ApiDatasetsGetRunsParams
+params: RequestParams = {}
+Returns Promise<ApiPaginatedDatasetRuns>
+datasetsList: ((query: ApiDatasetsListParams, params?: RequestParams) => Promise<ApiPaginatedDatasets>)
+Description
+Get all datasets
+
+Tags
+Datasets
+
+Name
+DatasetsList
+
+Request
+GET:/api/public/v2/datasets
+
+Secure
+(query, params?): Promise<ApiPaginatedDatasets>
+Parameters
+query: ApiDatasetsListParams
+params: RequestParams = {}
+Returns Promise<ApiPaginatedDatasets>
+healthHealth: ((params?: RequestParams) => Promise<ApiHealthResponse>)
+Description
+Check health of API and database
+
+Tags
+Health
+
+Name
+HealthHealth
+
+Request
+GET:/api/public/health
+
+(params?): Promise<ApiHealthResponse>
+Parameters
+params: RequestParams = {}
+Returns Promise<ApiHealthResponse>
+ingestionBatch: ((data: ApiIngestionBatchPayload, params?: RequestParams) => Promise<ApiIngestionResponse>)
+Description
+Batched ingestion for Langfuse Tracing. If you want to use tracing via the API, such as to build your own Langfuse client implementation, this is the only API route you need to implement. Within each batch, there can be multiple events. Each event has a type, an id, a timestamp, metadata and a body. Internally, we refer to this as the "event envelope" as it tells us something about the event but not the trace. We use the event id within this envelope to deduplicate messages to avoid processing the same event twice, i.e. the event id should be unique per request. The event.body.id is the ID of the actual trace and will be used for updates and will be visible within the Langfuse App. I.e. if you want to update a trace, you'd use the same body id, but separate event IDs. Notes: - Introduction to data model: https://langfuse.com/docs/tracing-data-model - Batch sizes are limited to 3.5 MB in total. You need to adjust the number of events per batch accordingly. - The API does not return a 4xx status code for input errors. Instead, it responds with a 207 status code, which includes a list of the encountered errors.
+
+Tags
+Ingestion
+
+Name
+IngestionBatch
+
+Request
+POST:/api/public/ingestion
+
+Secure
+(data, params?): Promise<ApiIngestionResponse>
+Parameters
+data: ApiIngestionBatchPayload
+params: RequestParams = {}
+Returns Promise<ApiIngestionResponse>
+mediaGet: ((mediaId: string, params?: RequestParams) => Promise<ApiGetMediaResponse>)
+Description
+Get a media record
+
+Tags
+Media
+
+Name
+MediaGet
+
+Request
+GET:/api/public/media/{mediaId}
+
+Secure
+(mediaId, params?): Promise<ApiGetMediaResponse>
+Parameters
+mediaId: string
+params: RequestParams = {}
+Returns Promise<ApiGetMediaResponse>
+mediaGetUploadUrl: ((data: ApiGetMediaUploadUrlRequest, params?: RequestParams) => Promise<ApiGetMediaUploadUrlResponse>)
+Description
+Get a presigned upload URL for a media record
+
+Tags
+Media
+
+Name
+MediaGetUploadUrl
+
+Request
+POST:/api/public/media
+
+Secure
+(data, params?): Promise<ApiGetMediaUploadUrlResponse>
+Parameters
+data: ApiGetMediaUploadUrlRequest
+params: RequestParams = {}
+Returns Promise<ApiGetMediaUploadUrlResponse>
+mediaPatch: ((mediaId: string, data: ApiPatchMediaBody, params?: RequestParams) => Promise<void>)
+Description
+Patch a media record
+
+Tags
+Media
+
+Name
+MediaPatch
+
+Request
+PATCH:/api/public/media/{mediaId}
+
+Secure
+(mediaId, data, params?): Promise<void>
+Parameters
+mediaId: string
+data: ApiPatchMediaBody
+params: RequestParams = {}
+Returns Promise<void>
+metricsDaily: ((query: ApiMetricsDailyParams, params?: RequestParams) => Promise<ApiDailyMetrics>)
+Description
+Get daily metrics of the Langfuse project
+
+Tags
+Metrics
+
+Name
+MetricsDaily
+
+Request
+GET:/api/public/metrics/daily
+
+Secure
+(query, params?): Promise<ApiDailyMetrics>
+Parameters
+query: ApiMetricsDailyParams
+params: RequestParams = {}
+Returns Promise<ApiDailyMetrics>
+modelsCreate: ((data: ApiCreateModelRequest, params?: RequestParams) => Promise<ApiModel>)
+Description
+Create a model
+
+Tags
+Models
+
+Name
+ModelsCreate
+
+Request
+POST:/api/public/models
+
+Secure
+(data, params?): Promise<ApiModel>
+Parameters
+data: ApiCreateModelRequest
+params: RequestParams = {}
+Returns Promise<ApiModel>
+modelsDelete: ((id: string, params?: RequestParams) => Promise<void>)
+Description
+Delete a model. Cannot delete models managed by Langfuse. You can create your own definition with the same modelName to override the definition though.
+
+Tags
+Models
+
+Name
+ModelsDelete
+
+Request
+DELETE:/api/public/models/{id}
+
+Secure
+(id, params?): Promise<void>
+Parameters
+id: string
+params: RequestParams = {}
+Returns Promise<void>
+modelsGet: ((id: string, params?: RequestParams) => Promise<ApiModel>)
+Description
+Get a model
+
+Tags
+Models
+
+Name
+ModelsGet
+
+Request
+GET:/api/public/models/{id}
+
+Secure
+(id, params?): Promise<ApiModel>
+Parameters
+id: string
+params: RequestParams = {}
+Returns Promise<ApiModel>
+modelsList: ((query: ApiModelsListParams, params?: RequestParams) => Promise<ApiPaginatedModels>)
+Description
+Get all models
+
+Tags
+Models
+
+Name
+ModelsList
+
+Request
+GET:/api/public/models
+
+Secure
+(query, params?): Promise<ApiPaginatedModels>
+Parameters
+query: ApiModelsListParams
+params: RequestParams = {}
+Returns Promise<ApiPaginatedModels>
+observationsGet: ((observationId: string, params?: RequestParams) => Promise<ApiObservationsView>)
+Description
+Get a observation
+
+Tags
+Observations
+
+Name
+ObservationsGet
+
+Request
+GET:/api/public/observations/{observationId}
+
+Secure
+(observationId, params?): Promise<ApiObservationsView>
+Parameters
+observationId: string
+params: RequestParams = {}
+Returns Promise<ApiObservationsView>
+observationsGetMany: ((query: ApiObservationsGetManyParams, params?: RequestParams) => Promise<ApiObservationsViews>)
+Description
+Get a list of observations
+
+Tags
+Observations
+
+Name
+ObservationsGetMany
+
+Request
+GET:/api/public/observations
+
+Secure
+(query, params?): Promise<ApiObservationsViews>
+Parameters
+query: ApiObservationsGetManyParams
+params: RequestParams = {}
+Returns Promise<ApiObservationsViews>
+projectsGet: ((params?: RequestParams) => Promise<ApiProjects>)
+Description
+Get Project associated with API key
+
+Tags
+Projects
+
+Name
+ProjectsGet
+
+Request
+GET:/api/public/projects
+
+Secure
+(params?): Promise<ApiProjects>
+Parameters
+params: RequestParams = {}
+Returns Promise<ApiProjects>
+promptsCreate: ((data: ApiCreatePromptRequest, params?: RequestParams) => Promise<ApiPrompt>)
+Description
+Create a new version for the prompt with the given name
+
+Tags
+Prompts
+
+Name
+PromptsCreate
+
+Request
+POST:/api/public/v2/prompts
+
+Secure
+(data, params?): Promise<ApiPrompt>
+Parameters
+data: ApiCreatePromptRequest
+params: RequestParams = {}
+Returns Promise<ApiPrompt>
+promptsGet: ((__namedParameters: ApiPromptsGetParams, params?: RequestParams) => Promise<ApiPrompt>)
+Description
+Get a prompt
+
+Tags
+Prompts
+
+Name
+PromptsGet
+
+Request
+GET:/api/public/v2/prompts/{promptName}
+
+Secure
+(__namedParameters, params?): Promise<ApiPrompt>
+Parameters
+__namedParameters: ApiPromptsGetParams
+params: RequestParams = {}
+Returns Promise<ApiPrompt>
+promptsList: ((query: ApiPromptsListParams, params?: RequestParams) => Promise<ApiPromptMetaListResponse>)
+Description
+Get a list of prompt names with versions and labels
+
+Tags
+Prompts
+
+Name
+PromptsList
+
+Request
+GET:/api/public/v2/prompts
+
+Secure
+(query, params?): Promise<ApiPromptMetaListResponse>
+Parameters
+query: ApiPromptsListParams
+params: RequestParams = {}
+Returns Promise<ApiPromptMetaListResponse>
+promptVersionUpdate: ((name: string, version: number, data: ApiPromptVersionUpdatePayload, params?: RequestParams) => Promise<ApiPrompt>)
+Description
+Update labels for a specific prompt version
+
+Tags
+PromptVersion
+
+Name
+PromptVersionUpdate
+
+Request
+PATCH:/api/public/v2/prompts/{name}/versions/{version}
+
+Secure
+(name, version, data, params?): Promise<ApiPrompt>
+Parameters
+name: string
+version: number
+data: ApiPromptVersionUpdatePayload
+params: RequestParams = {}
+Returns Promise<ApiPrompt>
+scoreConfigsCreate: ((data: ApiCreateScoreConfigRequest, params?: RequestParams) => Promise<ApiScoreConfig>)
+Description
+Create a score configuration (config). Score configs are used to define the structure of scores
+
+Tags
+ScoreConfigs
+
+Name
+ScoreConfigsCreate
+
+Request
+POST:/api/public/score-configs
+
+Secure
+(data, params?): Promise<ApiScoreConfig>
+Parameters
+data: ApiCreateScoreConfigRequest
+params: RequestParams = {}
+Returns Promise<ApiScoreConfig>
+scoreConfigsGet: ((query: ApiScoreConfigsGetParams, params?: RequestParams) => Promise<ApiScoreConfigs>)
+Description
+Get all score configs
+
+Tags
+ScoreConfigs
+
+Name
+ScoreConfigsGet
+
+Request
+GET:/api/public/score-configs
+
+Secure
+(query, params?): Promise<ApiScoreConfigs>
+Parameters
+query: ApiScoreConfigsGetParams
+params: RequestParams = {}
+Returns Promise<ApiScoreConfigs>
+scoreConfigsGetById: ((configId: string, params?: RequestParams) => Promise<ApiScoreConfig>)
+Description
+Get a score config
+
+Tags
+ScoreConfigs
+
+Name
+ScoreConfigsGetById
+
+Request
+GET:/api/public/score-configs/{configId}
+
+Secure
+(configId, params?): Promise<ApiScoreConfig>
+Parameters
+configId: string
+params: RequestParams = {}
+Returns Promise<ApiScoreConfig>
+scoreCreate: ((data: ApiCreateScoreRequest, params?: RequestParams) => Promise<ApiCreateScoreResponse>)
+Description
+Create a score
+
+Tags
+Score
+
+Name
+ScoreCreate
+
+Request
+POST:/api/public/scores
+
+Secure
+(data, params?): Promise<ApiCreateScoreResponse>
+Parameters
+data: ApiCreateScoreRequest
+params: RequestParams = {}
+Returns Promise<ApiCreateScoreResponse>
+scoreDelete: ((scoreId: string, params?: RequestParams) => Promise<void>)
+Description
+Delete a score
+
+Tags
+Score
+
+Name
+ScoreDelete
+
+Request
+DELETE:/api/public/scores/{scoreId}
+
+Secure
+(scoreId, params?): Promise<void>
+Parameters
+scoreId: string
+params: RequestParams = {}
+Returns Promise<void>
+scoreGet: ((query: ApiScoreGetParams, params?: RequestParams) => Promise<ApiGetScoresResponse>)
+Description
+Get a list of scores
+
+Tags
+Score
+
+Name
+ScoreGet
+
+Request
+GET:/api/public/scores
+
+Secure
+(query, params?): Promise<ApiGetScoresResponse>
+Parameters
+query: ApiScoreGetParams
+params: RequestParams = {}
+Returns Promise<ApiGetScoresResponse>
+scoreGetById: ((scoreId: string, params?: RequestParams) => Promise<ApiScore>)
+Description
+Get a score
+
+Tags
+Score
+
+Name
+ScoreGetById
+
+Request
+GET:/api/public/scores/{scoreId}
+
+Secure
+(scoreId, params?): Promise<ApiScore>
+Parameters
+scoreId: string
+params: RequestParams = {}
+Returns Promise<ApiScore>
+sessionsGet: ((sessionId: string, params?: RequestParams) => Promise<ApiSessionWithTraces>)
+Description
+Get a session. Please note that traces on this endpoint are not paginated, if you plan to fetch large sessions, consider GET /api/public/traces?sessionId=<sessionId>
+
+Tags
+Sessions
+
+Name
+SessionsGet
+
+Request
+GET:/api/public/sessions/{sessionId}
+
+Secure
+(sessionId, params?): Promise<ApiSessionWithTraces>
+Parameters
+sessionId: string
+params: RequestParams = {}
+Returns Promise<ApiSessionWithTraces>
+sessionsList: ((query: ApiSessionsListParams, params?: RequestParams) => Promise<ApiPaginatedSessions>)
+Description
+Get sessions
+
+Tags
+Sessions
+
+Name
+SessionsList
+
+Request
+GET:/api/public/sessions
+
+Secure
+(query, params?): Promise<ApiPaginatedSessions>
+Parameters
+query: ApiSessionsListParams
+params: RequestParams = {}
+Returns Promise<ApiPaginatedSessions>
+traceGet: ((traceId: string, params?: RequestParams) => Promise<ApiTraceWithFullDetails>)
+Description
+Get a specific trace
+
+Tags
+Trace
+
+Name
+TraceGet
+
+Request
+GET:/api/public/traces/{traceId}
+
+Secure
+(traceId, params?): Promise<ApiTraceWithFullDetails>
+Parameters
+traceId: string
+params: RequestParams = {}
+Returns Promise<ApiTraceWithFullDetails>
+traceList: ((query: ApiTraceListParams, params?: RequestParams) => Promise<ApiTraces>)
+Description
+Get list of traces
+
+Tags
+Trace
+
+Name
+TraceList
+
+Request
+GET:/api/public/traces
+
+Secure
+(query, params?): Promise<ApiTraces>
+Parameters
+query: ApiTraceListParams
+params: RequestParams = {}
+Returns Promise<ApiTraces>
+Defined in langfuse/src/langfuse.ts:33
+baseUrl
+baseUrl: string
+Inherited from LangfuseCore.baseUrl
+
+Defined in langfuse-core/lib/index.d.ts:4649
+_exportLocalEvents
+_exportLocalEvents(projectId): Promise<(
+    | {
+        type: "trace-create";
+    } & {
+        body: {
+            environment?: null | string;
+            id?: null | string;
+            input?: unknown;
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            public?: null | boolean;
+            release?: null | string;
+            sessionId?: null | string;
+            tags?: null | string[];
+            timestamp?: null | string;
+            userId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "score-create";
+    } & {
+        body: {
+            comment?: null | string;
+            configId?: null | string;
+            dataType?: "NUMERIC" | "BOOLEAN" | "CATEGORICAL";
+            environment?: null | string;
+            id?: null | string;
+            name: string;
+            observationId?: null | string;
+            traceId: string;
+            value: string | number;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "span-create";
+    } & {
+        body: {
+            endTime?: null | string;
+        } & {
+            id?: null | string;
+        } & {
+            environment?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "span-update";
+    } & {
+        body: {
+            endTime?: null | string;
+        } & {
+            id: string;
+        } & {
+            environment?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "generation-create";
+    } & {
+        body: {
+            completionStartTime?: null | string;
+            costDetails?: null | {
+                [key: string]: number;
+            };
+            model?: null | string;
+            modelParameters?: null | {
+                [key: string]: (...)[(...)]["MapValue"];
+            };
+            promptName?: null | string;
+            promptVersion?: null | number;
+            usage?: {
+                input?: null | number;
+                inputCost?: null | number;
+                output?: null | number;
+                outputCost?: null | number;
+                total?: null | number;
+                totalCost?: null | number;
+                unit?:
+                    | "CHARACTERS"
+                    | "TOKENS"
+                    | "MILLISECONDS"
+                    | "SECONDS"
+                    | "IMAGES"
+                    | "REQUESTS";
+            } | {
+                completionTokens?: null | number;
+                promptTokens?: null | number;
+                totalTokens?: null | number;
+            };
+            usageDetails?: {
+                [key: string]: number;
+            } | {
+                completion_tokens: number;
+                completion_tokens_details?: null | {
+                    [key: ...]: ...;
+                };
+                prompt_tokens: number;
+                prompt_tokens_details?: null | {
+                    [key: ...]: ...;
+                };
+                total_tokens: number;
+            };
+        } & {
+            endTime?: null | string;
+        } & {
+            id?: null | string;
+        } & {
+            environment?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "generation-update";
+    } & {
+        body: {
+            completionStartTime?: null | string;
+            costDetails?: null | {
+                [key: string]: number;
+            };
+            model?: null | string;
+            modelParameters?: null | {
+                [key: string]: (...)[(...)]["MapValue"];
+            };
+            promptName?: null | string;
+            promptVersion?: null | number;
+            usage?: {
+                input?: null | number;
+                inputCost?: null | number;
+                output?: null | number;
+                outputCost?: null | number;
+                total?: null | number;
+                totalCost?: null | number;
+                unit?:
+                    | "CHARACTERS"
+                    | "TOKENS"
+                    | "MILLISECONDS"
+                    | "SECONDS"
+                    | "IMAGES"
+                    | "REQUESTS";
+            } | {
+                completionTokens?: null | number;
+                promptTokens?: null | number;
+                totalTokens?: null | number;
+            };
+            usageDetails?: {
+                [key: string]: number;
+            } | {
+                completion_tokens: number;
+                completion_tokens_details?: null | {
+                    [key: ...]: ...;
+                };
+                prompt_tokens: number;
+                prompt_tokens_details?: null | {
+                    [key: ...]: ...;
+                };
+                total_tokens: number;
+            };
+        } & {
+            endTime?: null | string;
+        } & {
+            id: string;
+        } & {
+            environment?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "event-create";
+    } & {
+        body: {
+            id?: null | string;
+        } & {
+            environment?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "sdk-log";
+    } & {
+        body: {
+            log: unknown;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "observation-create";
+    } & {
+        body: {
+            completionStartTime?: null | string;
+            endTime?: null | string;
+            environment?: null | string;
+            id?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            model?: null | string;
+            modelParameters?: null | {
+                [key: string]: components["schemas"]["MapValue"];
+            };
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            type: "SPAN" | "GENERATION" | "EVENT";
+            usage?: {
+                input?: null | number;
+                inputCost?: null | number;
+                output?: null | number;
+                outputCost?: null | number;
+                total?: null | number;
+                totalCost?: null | number;
+                unit?:
+                    | "CHARACTERS"
+                    | "TOKENS"
+                    | "MILLISECONDS"
+                    | "SECONDS"
+                    | "IMAGES"
+                    | "REQUESTS";
+            };
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "observation-update";
+    } & {
+        body: {
+            completionStartTime?: null | string;
+            endTime?: null | string;
+            environment?: null | string;
+            id?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            model?: null | string;
+            modelParameters?: null | {
+                [key: string]: components["schemas"]["MapValue"];
+            };
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            type: "SPAN" | "GENERATION" | "EVENT";
+            usage?: {
+                input?: null | number;
+                inputCost?: null | number;
+                output?: null | number;
+                outputCost?: null | number;
+                total?: null | number;
+                totalCost?: null | number;
+                unit?:
+                    | "CHARACTERS"
+                    | "TOKENS"
+                    | "MILLISECONDS"
+                    | "SECONDS"
+                    | "IMAGES"
+                    | "REQUESTS";
+            };
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    })[]>
+Parameters
+projectId: string
+Returns Promise<(
+    | {
+        type: "trace-create";
+    } & {
+        body: {
+            environment?: null | string;
+            id?: null | string;
+            input?: unknown;
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            public?: null | boolean;
+            release?: null | string;
+            sessionId?: null | string;
+            tags?: null | string[];
+            timestamp?: null | string;
+            userId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "score-create";
+    } & {
+        body: {
+            comment?: null | string;
+            configId?: null | string;
+            dataType?: "NUMERIC" | "BOOLEAN" | "CATEGORICAL";
+            environment?: null | string;
+            id?: null | string;
+            name: string;
+            observationId?: null | string;
+            traceId: string;
+            value: string | number;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "span-create";
+    } & {
+        body: {
+            endTime?: null | string;
+        } & {
+            id?: null | string;
+        } & {
+            environment?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "span-update";
+    } & {
+        body: {
+            endTime?: null | string;
+        } & {
+            id: string;
+        } & {
+            environment?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "generation-create";
+    } & {
+        body: {
+            completionStartTime?: null | string;
+            costDetails?: null | {
+                [key: string]: number;
+            };
+            model?: null | string;
+            modelParameters?: null | {
+                [key: string]: (...)[(...)]["MapValue"];
+            };
+            promptName?: null | string;
+            promptVersion?: null | number;
+            usage?: {
+                input?: null | number;
+                inputCost?: null | number;
+                output?: null | number;
+                outputCost?: null | number;
+                total?: null | number;
+                totalCost?: null | number;
+                unit?:
+                    | "CHARACTERS"
+                    | "TOKENS"
+                    | "MILLISECONDS"
+                    | "SECONDS"
+                    | "IMAGES"
+                    | "REQUESTS";
+            } | {
+                completionTokens?: null | number;
+                promptTokens?: null | number;
+                totalTokens?: null | number;
+            };
+            usageDetails?: {
+                [key: string]: number;
+            } | {
+                completion_tokens: number;
+                completion_tokens_details?: null | {
+                    [key: ...]: ...;
+                };
+                prompt_tokens: number;
+                prompt_tokens_details?: null | {
+                    [key: ...]: ...;
+                };
+                total_tokens: number;
+            };
+        } & {
+            endTime?: null | string;
+        } & {
+            id?: null | string;
+        } & {
+            environment?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "generation-update";
+    } & {
+        body: {
+            completionStartTime?: null | string;
+            costDetails?: null | {
+                [key: string]: number;
+            };
+            model?: null | string;
+            modelParameters?: null | {
+                [key: string]: (...)[(...)]["MapValue"];
+            };
+            promptName?: null | string;
+            promptVersion?: null | number;
+            usage?: {
+                input?: null | number;
+                inputCost?: null | number;
+                output?: null | number;
+                outputCost?: null | number;
+                total?: null | number;
+                totalCost?: null | number;
+                unit?:
+                    | "CHARACTERS"
+                    | "TOKENS"
+                    | "MILLISECONDS"
+                    | "SECONDS"
+                    | "IMAGES"
+                    | "REQUESTS";
+            } | {
+                completionTokens?: null | number;
+                promptTokens?: null | number;
+                totalTokens?: null | number;
+            };
+            usageDetails?: {
+                [key: string]: number;
+            } | {
+                completion_tokens: number;
+                completion_tokens_details?: null | {
+                    [key: ...]: ...;
+                };
+                prompt_tokens: number;
+                prompt_tokens_details?: null | {
+                    [key: ...]: ...;
+                };
+                total_tokens: number;
+            };
+        } & {
+            endTime?: null | string;
+        } & {
+            id: string;
+        } & {
+            environment?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "event-create";
+    } & {
+        body: {
+            id?: null | string;
+        } & {
+            environment?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "sdk-log";
+    } & {
+        body: {
+            log: unknown;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "observation-create";
+    } & {
+        body: {
+            completionStartTime?: null | string;
+            endTime?: null | string;
+            environment?: null | string;
+            id?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            model?: null | string;
+            modelParameters?: null | {
+                [key: string]: components["schemas"]["MapValue"];
+            };
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            type: "SPAN" | "GENERATION" | "EVENT";
+            usage?: {
+                input?: null | number;
+                inputCost?: null | number;
+                output?: null | number;
+                outputCost?: null | number;
+                total?: null | number;
+                totalCost?: null | number;
+                unit?:
+                    | "CHARACTERS"
+                    | "TOKENS"
+                    | "MILLISECONDS"
+                    | "SECONDS"
+                    | "IMAGES"
+                    | "REQUESTS";
+            };
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    }
+    | {
+        type: "observation-update";
+    } & {
+        body: {
+            completionStartTime?: null | string;
+            endTime?: null | string;
+            environment?: null | string;
+            id?: null | string;
+            input?: unknown;
+            level?:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            model?: null | string;
+            modelParameters?: null | {
+                [key: string]: components["schemas"]["MapValue"];
+            };
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            startTime?: null | string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            type: "SPAN" | "GENERATION" | "EVENT";
+            usage?: {
+                input?: null | number;
+                inputCost?: null | number;
+                output?: null | number;
+                outputCost?: null | number;
+                total?: null | number;
+                totalCost?: null | number;
+                unit?:
+                    | "CHARACTERS"
+                    | "TOKENS"
+                    | "MILLISECONDS"
+                    | "SECONDS"
+                    | "IMAGES"
+                    | "REQUESTS";
+            };
+            version?: null | string;
+        };
+    } & {
+        id: string;
+        metadata?: unknown;
+        timestamp: string;
+    })[]>
+Inherited from LangfuseCore._exportLocalEvents
+
+Defined in langfuse-core/lib/index.d.ts:4779
+_getFetchOptions
+_getFetchOptions(p): LangfuseFetchOptions
+Parameters
+p: {
+    body?: string | Buffer;
+    fetchTimeout?: number;
+    method:
+        | "GET"
+        | "POST"
+        | "PUT"
+        | "PATCH";
+}
+Optionalbody?: string | Buffer
+OptionalfetchTimeout?: number
+method:
+    | "GET"
+    | "POST"
+    | "PUT"
+    | "PATCH"
+Returns LangfuseFetchOptions
+Inherited from LangfuseCore._getFetchOptions
+
+Defined in langfuse-core/lib/index.d.ts:4768
+_updateGeneration
+_updateGeneration(body): this
+Parameters
+body: Omit<{
+    completionStartTime?: null | Date;
+    costDetails?: null | {
+        [key: string]: number;
+    };
+    endTime?: null | Date;
+    environment?: null | string;
+    id: string;
+    input?: any;
+    level?:
+        | "DEBUG"
+        | "DEFAULT"
+        | "WARNING"
+        | "ERROR";
+    metadata?: any;
+    model?: null | string;
+    modelParameters?: null | {
+        [key: string]: components["schemas"]["MapValue"];
+    };
+    name?: null | string;
+    output?: any;
+    parentObservationId?: null | string;
+    promptName?: null | string;
+    promptVersion?: null | number;
+    startTime?: null | Date;
+    statusMessage?: null | string;
+    traceId?: null | string;
+    usage?: {
+        input?: null | number;
+        inputCost?: null | number;
+        output?: null | number;
+        outputCost?: null | number;
+        total?: null | number;
+        totalCost?: null | number;
+        unit?:
+            | "CHARACTERS"
+            | "TOKENS"
+            | "MILLISECONDS"
+            | "SECONDS"
+            | "IMAGES"
+            | "REQUESTS";
+    } | {
+        completionTokens?: null | number;
+        promptTokens?: null | number;
+        totalTokens?: null | number;
+    };
+    usageDetails?: {
+        [key: string]: number;
+    } | {
+        completion_tokens: number;
+        completion_tokens_details?: null | {
+            [key: string]: number;
+        };
+        prompt_tokens: number;
+        prompt_tokens_details?: null | {
+            [key: string]: number;
+        };
+        total_tokens: number;
+    };
+    version?: null | string;
+}, "externalId" | "traceIdType">
+Returns this
+Inherited from LangfuseCore._updateGeneration
+
+Defined in langfuse-core/lib/index.d.ts:4873
+_updateSpan
+_updateSpan(body): this
+Parameters
+body: Omit<{
+    endTime?: null | Date;
+    environment?: null | string;
+    id: string;
+    input?: any;
+    level?:
+        | "DEBUG"
+        | "DEFAULT"
+        | "WARNING"
+        | "ERROR";
+    metadata?: any;
+    name?: null | string;
+    output?: any;
+    parentObservationId?: null | string;
+    startTime?: null | Date;
+    statusMessage?: null | string;
+    traceId?: null | string;
+    version?: null | string;
+}, "externalId" | "traceIdType">
+Returns this
+Inherited from LangfuseCore._updateSpan
+
+Defined in langfuse-core/lib/index.d.ts:4872
+createDataset
+createDataset(dataset): Promise<Omit<{
+    createdAt: Date;
+    description?: null | string;
+    id: string;
+    metadata?: any;
+    name: string;
+    projectId: string;
+    updatedAt: Date;
+}, "externalId" | "traceIdType">>
+Creates a dataset. Upserts the dataset if it already exists.
+
+Parameters
+dataset: string | {
+    description?: string;
+    metadata?: any;
+    name: string;
+}
+Can be either a string (name) or an object with name, description and metadata
+
+Returns Promise<Omit<{
+    createdAt: Date;
+    description?: null | string;
+    id: string;
+    metadata?: any;
+    name: string;
+    projectId: string;
+    updatedAt: Date;
+}, "externalId" | "traceIdType">>
+A promise that resolves to the response of the create operation.
+
+Inherited from LangfuseCore.createDataset
+
+Defined in langfuse-core/lib/index.d.ts:4711
+createDatasetItem
+createDatasetItem(body): Promise<Omit<{
+    createdAt: Date;
+    datasetId: string;
+    datasetName: string;
+    expectedOutput?: any;
+    id: string;
+    input?: any;
+    metadata?: any;
+    sourceObservationId?: null | string;
+    sourceTraceId?: null | string;
+    status: "ACTIVE" | "ARCHIVED";
+    updatedAt: Date;
+}, "externalId" | "traceIdType">>
+Creates a dataset item. Upserts the item if it already exists.
+
+Parameters
+body: Omit<{
+    datasetName: string;
+    expectedOutput?: any;
+    id?: null | string;
+    input?: any;
+    metadata?: any;
+    sourceObservationId?: null | string;
+    sourceTraceId?: null | string;
+    status?: "ACTIVE" | "ARCHIVED";
+}, "externalId" | "traceIdType">
+The body of the dataset item to be created.
+
+Returns Promise<Omit<{
+    createdAt: Date;
+    datasetId: string;
+    datasetName: string;
+    expectedOutput?: any;
+    id: string;
+    input?: any;
+    metadata?: any;
+    sourceObservationId?: null | string;
+    sourceTraceId?: null | string;
+    status: "ACTIVE" | "ARCHIVED";
+    updatedAt: Date;
+}, "externalId" | "traceIdType">>
+A promise that resolves to the response of the create operation.
+
+Inherited from LangfuseCore.createDatasetItem
+
+Defined in langfuse-core/lib/index.d.ts:4721
+createDatasetRunItem
+createDatasetRunItem(body): Promise<Omit<{
+    createdAt: Date;
+    datasetItemId: string;
+    datasetRunId: string;
+    datasetRunName: string;
+    id: string;
+    observationId?: null | string;
+    traceId: string;
+    updatedAt: Date;
+}, "externalId" | "traceIdType">>
+Parameters
+body: Omit<{
+    datasetItemId: string;
+    metadata?: any;
+    observationId?: null | string;
+    runDescription?: null | string;
+    runName: string;
+    traceId?: null | string;
+}, "externalId" | "traceIdType">
+Returns Promise<Omit<{
+    createdAt: Date;
+    datasetItemId: string;
+    datasetRunId: string;
+    datasetRunName: string;
+    id: string;
+    observationId?: null | string;
+    traceId: string;
+    updatedAt: Date;
+}, "externalId" | "traceIdType">>
+Inherited from LangfuseCore.createDatasetRunItem
+
+Defined in langfuse-core/lib/index.d.ts:4704
+createPrompt
+createPrompt(body): Promise<ChatPromptClient>
+Parameters
+body: CreateChatPromptBody
+Returns Promise<ChatPromptClient>
+Inherited from LangfuseCore.createPrompt
+
+Defined in langfuse-core/lib/index.d.ts:4805
+createPrompt(body): Promise<TextPromptClient>
+Parameters
+body: CreateTextPromptBody
+Returns Promise<TextPromptClient>
+Inherited from LangfuseCore.createPrompt
+
+Defined in langfuse-core/lib/index.d.ts:4806
+createPromptStateless
+createPromptStateless(body): Promise<{
+    type: "chat";
+} & {
+    prompt: {
+        content: string;
+        role: string;
+    }[];
+} & {
+    commitMessage?: null | string;
+    config: unknown;
+    labels: string[];
+    name: string;
+    tags: string[];
+    version: number;
+} | {
+    type: "text";
+} & {
+    prompt: string;
+} & {
+    commitMessage?: null | string;
+    config: unknown;
+    labels: string[];
+    name: string;
+    tags: string[];
+    version: number;
+}>
+Parameters
+body: CreateLangfusePromptBody
+Returns Promise<{
+    type: "chat";
+} & {
+    prompt: {
+        content: string;
+        role: string;
+    }[];
+} & {
+    commitMessage?: null | string;
+    config: unknown;
+    labels: string[];
+    name: string;
+    tags: string[];
+    version: number;
+} | {
+    type: "text";
+} & {
+    prompt: string;
+} & {
+    commitMessage?: null | string;
+    config: unknown;
+    labels: string[];
+    name: string;
+    tags: string[];
+    version: number;
+}>
+Inherited from LangfuseCore.createPromptStateless
+
+Defined in langfuse-core/lib/index.d.ts:4724
+debug
+debug(enabled?): void
+Parameters
+Optionalenabled: boolean
+Returns void
+Inherited from LangfuseCore.debug
+
+Defined in langfuse-core/lib/index.d.ts:4679
+event
+event(body): LangfuseEventClient
+Parameters
+body: Omit<{
+    environment?: null | string;
+    id?: null | string;
+    input?: any;
+    level?:
+        | "DEBUG"
+        | "DEFAULT"
+        | "WARNING"
+        | "ERROR";
+    metadata?: any;
+    name?: null | string;
+    output?: any;
+    parentObservationId?: null | string;
+    startTime?: null | Date;
+    statusMessage?: null | string;
+    traceId?: null | string;
+    version?: null | string;
+}, "externalId" | "traceIdType">
+Returns LangfuseEventClient
+Inherited from LangfuseCore.event
+
+Defined in langfuse-core/lib/index.d.ts:4793
+fetch
+fetch(url, options): Promise<LangfuseFetchResponse>
+Parameters
+url: string
+options: LangfuseFetchOptions
+Returns Promise<LangfuseFetchResponse>
+Overrides LangfuseCore.fetch
+
+Defined in langfuse/src/langfuse.ts:87
+fetchMedia
+fetchMedia(id): Promise<Omit<{
+    contentLength: number;
+    contentType: string;
+    mediaId: string;
+    uploadedAt: string;
+    url: string;
+    urlExpiry: string;
+}, "externalId" | "traceIdType">>
+Parameters
+id: string
+Returns Promise<Omit<{
+    contentLength: number;
+    contentType: string;
+    mediaId: string;
+    uploadedAt: string;
+    url: string;
+    urlExpiry: string;
+}, "externalId" | "traceIdType">>
+Inherited from LangfuseCore.fetchMedia
+
+Defined in langfuse-core/lib/index.d.ts:4830
+fetchObservation
+fetchObservation(observationId): Promise<{
+    data: Omit<{
+        calculatedInputCost?: null | number;
+        calculatedOutputCost?: null | number;
+        calculatedTotalCost?: null | number;
+        completionStartTime?: null | Date;
+        costDetails?: null | {
+            [key: string]: number;
+        };
+        endTime?: null | Date;
+        environment?: null | string;
+        id: string;
+        input?: any;
+        inputPrice?: null | number;
+        latency?: null | number;
+        level:
+            | "DEBUG"
+            | "DEFAULT"
+            | "WARNING"
+            | "ERROR";
+        metadata?: any;
+        model?: null | string;
+        modelId?: null | string;
+        modelParameters?: null | {
+            [key: string]: components["schemas"]["MapValue"];
+        };
+        name?: null | string;
+        output?: any;
+        outputPrice?: null | number;
+        parentObservationId?: null | string;
+        promptId?: null | string;
+        promptName?: null | string;
+        promptVersion?: null | number;
+        startTime: Date;
+        statusMessage?: null | string;
+        timeToFirstToken?: null | number;
+        totalPrice?: null | number;
+        traceId?: null | string;
+        type: string;
+        usage?: {
+            input?: null | number;
+            inputCost?: null | number;
+            output?: null | number;
+            outputCost?: null | number;
+            total?: null | number;
+            totalCost?: null | number;
+            unit?:
+                | "CHARACTERS"
+                | "TOKENS"
+                | "MILLISECONDS"
+                | "SECONDS"
+                | "IMAGES"
+                | "REQUESTS";
+        };
+        usageDetails?: null | {
+            [key: string]: number;
+        };
+        version?: null | string;
+    }, "externalId" | "traceIdType">;
+}>
+Parameters
+observationId: string
+Returns Promise<{
+    data: Omit<{
+        calculatedInputCost?: null | number;
+        calculatedOutputCost?: null | number;
+        calculatedTotalCost?: null | number;
+        completionStartTime?: null | Date;
+        costDetails?: null | {
+            [key: string]: number;
+        };
+        endTime?: null | Date;
+        environment?: null | string;
+        id: string;
+        input?: any;
+        inputPrice?: null | number;
+        latency?: null | number;
+        level:
+            | "DEBUG"
+            | "DEFAULT"
+            | "WARNING"
+            | "ERROR";
+        metadata?: any;
+        model?: null | string;
+        modelId?: null | string;
+        modelParameters?: null | {
+            [key: string]: components["schemas"]["MapValue"];
+        };
+        name?: null | string;
+        output?: any;
+        outputPrice?: null | number;
+        parentObservationId?: null | string;
+        promptId?: null | string;
+        promptName?: null | string;
+        promptVersion?: null | number;
+        startTime: Date;
+        statusMessage?: null | string;
+        timeToFirstToken?: null | number;
+        totalPrice?: null | number;
+        traceId?: null | string;
+        type: string;
+        usage?: {
+            input?: null | number;
+            inputCost?: null | number;
+            output?: null | number;
+            outputCost?: null | number;
+            total?: null | number;
+            totalCost?: null | number;
+            unit?:
+                | "CHARACTERS"
+                | "TOKENS"
+                | "MILLISECONDS"
+                | "SECONDS"
+                | "IMAGES"
+                | "REQUESTS";
+        };
+        usageDetails?: null | {
+            [key: string]: number;
+        };
+        version?: null | string;
+    }, "externalId" | "traceIdType">;
+}>
+Inherited from LangfuseCore.fetchObservation
+
+Defined in langfuse-core/lib/index.d.ts:4698
+fetchObservations
+fetchObservations(query?): Promise<Omit<{
+    data: ({
+        calculatedInputCost?: null | number;
+        calculatedOutputCost?: null | number;
+        calculatedTotalCost?: null | number;
+        inputPrice?: null | number;
+        latency?: null | number;
+        modelId?: null | string;
+        outputPrice?: null | number;
+        promptName?: null | string;
+        promptVersion?: null | number;
+        timeToFirstToken?: null | number;
+        totalPrice?: null | number;
+    } & {
+        completionStartTime?: null | string;
+        costDetails?: null | {
+            [key: string]: number;
+        };
+        endTime?: null | string;
+        environment?: null | string;
+        id: string;
+        input?: unknown;
+        level:
+            | "DEBUG"
+            | "DEFAULT"
+            | "WARNING"
+            | "ERROR";
+        metadata?: unknown;
+        model?: null | string;
+        modelParameters?: null | {
+            [key: string]: components["schemas"]["MapValue"];
+        };
+        name?: null | string;
+        output?: unknown;
+        parentObservationId?: null | string;
+        promptId?: null | string;
+        startTime: string;
+        statusMessage?: null | string;
+        traceId?: null | string;
+        type: string;
+        usage?: {
+            input?: null | number;
+            inputCost?: null | number;
+            output?: null | number;
+            outputCost?: null | number;
+            total?: null | number;
+            totalCost?: null | number;
+            unit?:
+                | "CHARACTERS"
+                | "TOKENS"
+                | "MILLISECONDS"
+                | "SECONDS"
+                | "IMAGES"
+                | "REQUESTS";
+        };
+        usageDetails?: null | {
+            [key: string]: number;
+        };
+        version?: null | string;
+    })[];
+    meta: {
+        limit: number;
+        page: number;
+        totalItems: number;
+        totalPages: number;
+    };
+}, "externalId" | "traceIdType">>
+Parameters
+Optionalquery: GetLangfuseObservationsQuery
+Returns Promise<Omit<{
+    data: ({
+        calculatedInputCost?: null | number;
+        calculatedOutputCost?: null | number;
+        calculatedTotalCost?: null | number;
+        inputPrice?: null | number;
+        latency?: null | number;
+        modelId?: null | string;
+        outputPrice?: null | number;
+        promptName?: null | string;
+        promptVersion?: null | number;
+        timeToFirstToken?: null | number;
+        totalPrice?: null | number;
+    } & {
+        completionStartTime?: null | string;
+        costDetails?: null | {
+            [key: string]: number;
+        };
+        endTime?: null | string;
+        environment?: null | string;
+        id: string;
+        input?: unknown;
+        level:
+            | "DEBUG"
+            | "DEFAULT"
+            | "WARNING"
+            | "ERROR";
+        metadata?: unknown;
+        model?: null | string;
+        modelParameters?: null | {
+            [key: string]: components["schemas"]["MapValue"];
+        };
+        name?: null | string;
+        output?: unknown;
+        parentObservationId?: null | string;
+        promptId?: null | string;
+        startTime: string;
+        statusMessage?: null | string;
+        traceId?: null | string;
+        type: string;
+        usage?: {
+            input?: null | number;
+            inputCost?: null | number;
+            output?: null | number;
+            outputCost?: null | number;
+            total?: null | number;
+            totalCost?: null | number;
+            unit?:
+                | "CHARACTERS"
+                | "TOKENS"
+                | "MILLISECONDS"
+                | "SECONDS"
+                | "IMAGES"
+                | "REQUESTS";
+        };
+        usageDetails?: null | {
+            [key: string]: number;
+        };
+        version?: null | string;
+    })[];
+    meta: {
+        limit: number;
+        page: number;
+        totalItems: number;
+        totalPages: number;
+    };
+}, "externalId" | "traceIdType">>
+Inherited from LangfuseCore.fetchObservations
+
+Defined in langfuse-core/lib/index.d.ts:4697
+fetchSessions
+fetchSessions(query?): Promise<Omit<{
+    data: {
+        createdAt: string;
+        id: string;
+        projectId: string;
+    }[];
+    meta: {
+        limit: number;
+        page: number;
+        totalItems: number;
+        totalPages: number;
+    };
+}, "externalId" | "traceIdType">>
+Parameters
+Optionalquery: GetLangfuseSessionsQuery
+Returns Promise<Omit<{
+    data: {
+        createdAt: string;
+        id: string;
+        projectId: string;
+    }[];
+    meta: {
+        limit: number;
+        page: number;
+        totalItems: number;
+        totalPages: number;
+    };
+}, "externalId" | "traceIdType">>
+Inherited from LangfuseCore.fetchSessions
+
+Defined in langfuse-core/lib/index.d.ts:4701
+fetchTrace
+fetchTrace(traceId): Promise<{
+    data: Omit<{
+        environment?: null | string;
+        htmlPath: string;
+        id: string;
+        input?: any;
+        latency: number;
+        metadata?: any;
+        name?: null | string;
+        observations: ({
+            calculatedInputCost?: null | number;
+            calculatedOutputCost?: null | number;
+            calculatedTotalCost?: null | number;
+            inputPrice?: null | number;
+            latency?: null | number;
+            modelId?: null | string;
+            outputPrice?: null | number;
+            promptName?: null | string;
+            promptVersion?: null | number;
+            timeToFirstToken?: null | number;
+            totalPrice?: null | number;
+        } & {
+            completionStartTime?: null | string;
+            costDetails?: null | {
+                [key: string]: number;
+            };
+            endTime?: null | string;
+            environment?: null | string;
+            id: string;
+            input?: unknown;
+            level:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            model?: null | string;
+            modelParameters?: null | {
+                [key: string]: (...)[(...)]["MapValue"];
+            };
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            promptId?: null | string;
+            startTime: string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            type: string;
+            usage?: {
+                input?: null | number;
+                inputCost?: null | number;
+                output?: null | number;
+                outputCost?: null | number;
+                total?: null | number;
+                totalCost?: null | number;
+                unit?:
+                    | "CHARACTERS"
+                    | "TOKENS"
+                    | "MILLISECONDS"
+                    | "SECONDS"
+                    | "IMAGES"
+                    | "REQUESTS";
+            };
+            usageDetails?: null | {
+                [key: string]: number;
+            };
+            version?: null | string;
+        })[];
+        output?: any;
+        public?: null | boolean;
+        release?: null | string;
+        scores: ({
+            dataType: "NUMERIC";
+        } & {
+            value: number;
+        } & {
+            authorUserId?: null | string;
+            comment?: null | string;
+            configId?: null | string;
+            createdAt: string;
+            environment?: null | string;
+            id: string;
+            name: string;
+            observationId?: null | string;
+            queueId?: null | string;
+            source: "ANNOTATION" | "API" | "EVAL";
+            timestamp: string;
+            traceId: string;
+            updatedAt: string;
+        } | {
+            dataType: "CATEGORICAL";
+        } & {
+            stringValue: string;
+            value?: null | number;
+        } & {
+            authorUserId?: null | string;
+            comment?: null | string;
+            configId?: null | string;
+            createdAt: string;
+            environment?: null | string;
+            id: string;
+            name: string;
+            observationId?: null | string;
+            queueId?: null | string;
+            source: "ANNOTATION" | "API" | "EVAL";
+            timestamp: string;
+            traceId: string;
+            updatedAt: string;
+        } | {
+            dataType: "BOOLEAN";
+        } & {
+            stringValue: string;
+            value: number;
+        } & {
+            authorUserId?: null | string;
+            comment?: null | string;
+            configId?: null | string;
+            createdAt: string;
+            environment?: null | string;
+            id: string;
+            name: string;
+            observationId?: null | string;
+            queueId?: null | string;
+            source: "ANNOTATION" | "API" | "EVAL";
+            timestamp: string;
+            traceId: string;
+            updatedAt: string;
+        })[];
+        sessionId?: null | string;
+        tags?: null | string[];
+        timestamp: Date;
+        totalCost: number;
+        userId?: null | string;
+        version?: null | string;
+    }, "externalId" | "traceIdType">;
+}>
+Parameters
+traceId: string
+Returns Promise<{
+    data: Omit<{
+        environment?: null | string;
+        htmlPath: string;
+        id: string;
+        input?: any;
+        latency: number;
+        metadata?: any;
+        name?: null | string;
+        observations: ({
+            calculatedInputCost?: null | number;
+            calculatedOutputCost?: null | number;
+            calculatedTotalCost?: null | number;
+            inputPrice?: null | number;
+            latency?: null | number;
+            modelId?: null | string;
+            outputPrice?: null | number;
+            promptName?: null | string;
+            promptVersion?: null | number;
+            timeToFirstToken?: null | number;
+            totalPrice?: null | number;
+        } & {
+            completionStartTime?: null | string;
+            costDetails?: null | {
+                [key: string]: number;
+            };
+            endTime?: null | string;
+            environment?: null | string;
+            id: string;
+            input?: unknown;
+            level:
+                | "DEBUG"
+                | "DEFAULT"
+                | "WARNING"
+                | "ERROR";
+            metadata?: unknown;
+            model?: null | string;
+            modelParameters?: null | {
+                [key: string]: (...)[(...)]["MapValue"];
+            };
+            name?: null | string;
+            output?: unknown;
+            parentObservationId?: null | string;
+            promptId?: null | string;
+            startTime: string;
+            statusMessage?: null | string;
+            traceId?: null | string;
+            type: string;
+            usage?: {
+                input?: null | number;
+                inputCost?: null | number;
+                output?: null | number;
+                outputCost?: null | number;
+                total?: null | number;
+                totalCost?: null | number;
+                unit?:
+                    | "CHARACTERS"
+                    | "TOKENS"
+                    | "MILLISECONDS"
+                    | "SECONDS"
+                    | "IMAGES"
+                    | "REQUESTS";
+            };
+            usageDetails?: null | {
+                [key: string]: number;
+            };
+            version?: null | string;
+        })[];
+        output?: any;
+        public?: null | boolean;
+        release?: null | string;
+        scores: ({
+            dataType: "NUMERIC";
+        } & {
+            value: number;
+        } & {
+            authorUserId?: null | string;
+            comment?: null | string;
+            configId?: null | string;
+            createdAt: string;
+            environment?: null | string;
+            id: string;
+            name: string;
+            observationId?: null | string;
+            queueId?: null | string;
+            source: "ANNOTATION" | "API" | "EVAL";
+            timestamp: string;
+            traceId: string;
+            updatedAt: string;
+        } | {
+            dataType: "CATEGORICAL";
+        } & {
+            stringValue: string;
+            value?: null | number;
+        } & {
+            authorUserId?: null | string;
+            comment?: null | string;
+            configId?: null | string;
+            createdAt: string;
+            environment?: null | string;
+            id: string;
+            name: string;
+            observationId?: null | string;
+            queueId?: null | string;
+            source: "ANNOTATION" | "API" | "EVAL";
+            timestamp: string;
+            traceId: string;
+            updatedAt: string;
+        } | {
+            dataType: "BOOLEAN";
+        } & {
+            stringValue: string;
+            value: number;
+        } & {
+            authorUserId?: null | string;
+            comment?: null | string;
+            configId?: null | string;
+            createdAt: string;
+            environment?: null | string;
+            id: string;
+            name: string;
+            observationId?: null | string;
+            queueId?: null | string;
+            source: "ANNOTATION" | "API" | "EVAL";
+            timestamp: string;
+            traceId: string;
+            updatedAt: string;
+        })[];
+        sessionId?: null | string;
+        tags?: null | string[];
+        timestamp: Date;
+        totalCost: number;
+        userId?: null | string;
+        version?: null | string;
+    }, "externalId" | "traceIdType">;
+}>
+Inherited from LangfuseCore.fetchTrace
+
+Defined in langfuse-core/lib/index.d.ts:4694
+fetchTraces
+fetchTraces(query?): Promise<Omit<{
+    data: ({
+        htmlPath: string;
+        latency: number;
+        observations: string[];
+        scores: string[];
+        totalCost: number;
+    } & {
+        environment?: null | string;
+        id: string;
+        input?: unknown;
+        metadata?: unknown;
+        name?: null | string;
+        output?: unknown;
+        public?: null | boolean;
+        release?: null | string;
+        sessionId?: null | string;
+        tags?: null | string[];
+        timestamp: string;
+        userId?: null | string;
+        version?: null | string;
+    })[];
+    meta: {
+        limit: number;
+        page: number;
+        totalItems: number;
+        totalPages: number;
+    };
+}, "externalId" | "traceIdType">>
+Parameters
+Optionalquery: GetLangfuseTracesQuery
+Returns Promise<Omit<{
+    data: ({
+        htmlPath: string;
+        latency: number;
+        observations: string[];
+        scores: string[];
+        totalCost: number;
+    } & {
+        environment?: null | string;
+        id: string;
+        input?: unknown;
+        metadata?: unknown;
+        name?: null | string;
+        output?: unknown;
+        public?: null | boolean;
+        release?: null | string;
+        sessionId?: null | string;
+        tags?: null | string[];
+        timestamp: string;
+        userId?: null | string;
+        version?: null | string;
+    })[];
+    meta: {
+        limit: number;
+        page: number;
+        totalItems: number;
+        totalPages: number;
+    };
+}, "externalId" | "traceIdType">>
+Inherited from LangfuseCore.fetchTraces
+
+Defined in langfuse-core/lib/index.d.ts:4693
+flush
+flush(callback?): void
+Parameters
+Optionalcallback: ((err?: any, data?: any) => void)
+(err?, data?): void
+Parameters
+Optionalerr: any
+Optionaldata: any
+Returns void
+Returns void
+Inherited from LangfuseCore.flush
+
+Defined in langfuse-core/lib/index.d.ts:4763
+flushAsync
+flushAsync(): Promise<void>
+Asynchronously flushes all events that are not yet sent to the server. This function always resolves, even if there were errors when flushing. Errors are emitted as "error" events and the promise resolves.
+
+Returns Promise<void>
+A promise that resolves when the flushing is completed.
+
+Inherited from LangfuseCore.flushAsync
+
+Defined in langfuse-core/lib/index.d.ts:4762
+generation
+generation(body): LangfuseGenerationClient
+Parameters
+body: Omit<Omit<{
+    completionStartTime?: null | Date;
+    costDetails?: null | {
+        [key: string]: number;
+    };
+    endTime?: null | Date;
+    environment?: null | string;
+    id?: null | string;
+    input?: any;
+    level?:
+        | "DEBUG"
+        | "DEFAULT"
+        | "WARNING"
+        | "ERROR";
+    metadata?: any;
+    model?: null | string;
+    modelParameters?: null | {
+        [key: string]: components["schemas"]["MapValue"];
+    };
+    name?: null | string;
+    output?: any;
+    parentObservationId?: null | string;
+    promptName?: null | string;
+    promptVersion?: null | number;
+    startTime?: null | Date;
+    statusMessage?: null | string;
+    traceId?: null | string;
+    usage?: {
+        input?: null | number;
+        inputCost?: null | number;
+        output?: null | number;
+        outputCost?: null | number;
+        total?: null | number;
+        totalCost?: null | number;
+        unit?:
+            | "CHARACTERS"
+            | "TOKENS"
+            | "MILLISECONDS"
+            | "SECONDS"
+            | "IMAGES"
+            | "REQUESTS";
+    } | {
+        completionTokens?: null | number;
+        promptTokens?: null | number;
+        totalTokens?: null | number;
+    };
+    usageDetails?: {
+        [key: string]: number;
+    } | {
+        completion_tokens: number;
+        completion_tokens_details?: null | {
+            [key: string]: number;
+        };
+        prompt_tokens: number;
+        prompt_tokens_details?: null | {
+            [key: string]: number;
+        };
+        total_tokens: number;
+    };
+    version?: null | string;
+}, "externalId" | "traceIdType">, "promptName" | "promptVersion"> & PromptInput
+Returns LangfuseGenerationClient
+Inherited from LangfuseCore.generation
+
+Defined in langfuse-core/lib/index.d.ts:4792
+getCustomUserAgent
+getCustomUserAgent(): void
+Returns void
+Defined in langfuse/src/langfuse.ts:99
+getDataset
+getDataset(name, options?): Promise<{
+    description?: string;
+    id: string;
+    items: DatasetItem[];
+    metadata?: any;
+    name: string;
+    projectId: string;
+}>
+Parameters
+name: string
+Optionaloptions: {
+    fetchItemsPageSize: number;
+}
+fetchItemsPageSize: number
+Returns Promise<{
+    description?: string;
+    id: string;
+    items: DatasetItem[];
+    metadata?: any;
+    name: string;
+    projectId: string;
+}>
+Inherited from LangfuseCore.getDataset
+
+Defined in langfuse-core/lib/index.d.ts:4795
+getDatasetItem
+getDatasetItem(id): Promise<Omit<{
+    createdAt: Date;
+    datasetId: string;
+    datasetName: string;
+    expectedOutput?: any;
+    id: string;
+    input?: any;
+    metadata?: any;
+    sourceObservationId?: null | string;
+    sourceTraceId?: null | string;
+    status: "ACTIVE" | "ARCHIVED";
+    updatedAt: Date;
+}, "externalId" | "traceIdType">>
+Parameters
+id: string
+Returns Promise<Omit<{
+    createdAt: Date;
+    datasetId: string;
+    datasetName: string;
+    expectedOutput?: any;
+    id: string;
+    input?: any;
+    metadata?: any;
+    sourceObservationId?: null | string;
+    sourceTraceId?: null | string;
+    status: "ACTIVE" | "ARCHIVED";
+    updatedAt: Date;
+}, "externalId" | "traceIdType">>
+Inherited from LangfuseCore.getDatasetItem
+
+Defined in langfuse-core/lib/index.d.ts:4722
+getDatasetRun
+getDatasetRun(params): Promise<Omit<{
+    createdAt: Date;
+    datasetId: string;
+    datasetName: string;
+    datasetRunItems: {
+        createdAt: string;
+        datasetItemId: string;
+        datasetRunId: string;
+        datasetRunName: string;
+        id: string;
+        observationId?: null | string;
+        traceId: string;
+        updatedAt: string;
+    }[];
+    description?: null | string;
+    id: string;
+    metadata?: any;
+    name: string;
+    updatedAt: Date;
+}, "externalId" | "traceIdType">>
+Parameters
+params: Omit<{
+    datasetName: string;
+    runName: string;
+}, "externalId" | "traceIdType">
+Returns Promise<Omit<{
+    createdAt: Date;
+    datasetId: string;
+    datasetName: string;
+    datasetRunItems: {
+        createdAt: string;
+        datasetItemId: string;
+        datasetRunId: string;
+        datasetRunName: string;
+        id: string;
+        observationId?: null | string;
+        traceId: string;
+        updatedAt: string;
+    }[];
+    description?: null | string;
+    id: string;
+    metadata?: any;
+    name: string;
+    updatedAt: Date;
+}, "externalId" | "traceIdType">>
+Inherited from LangfuseCore.getDatasetRun
+
+Defined in langfuse-core/lib/index.d.ts:4702
+getDatasetRuns
+getDatasetRuns(datasetName, query?): Promise<Omit<{
+    data: {
+        createdAt: string;
+        datasetId: string;
+        datasetName: string;
+        description?: null | string;
+        id: string;
+        metadata?: unknown;
+        name: string;
+        updatedAt: string;
+    }[];
+    meta: {
+        limit: number;
+        page: number;
+        totalItems: number;
+        totalPages: number;
+    };
+}, "externalId" | "traceIdType">>
+Parameters
+datasetName: string
+Optionalquery: {
+    limit?: null | number;
+    page?: null | number;
+}
+Optionallimit?: null | number
+Description
+limit of items per page
+
+Optionalpage?: null | number
+Description
+page number, starts at 1
+
+Returns Promise<Omit<{
+    data: {
+        createdAt: string;
+        datasetId: string;
+        datasetName: string;
+        description?: null | string;
+        id: string;
+        metadata?: unknown;
+        name: string;
+        updatedAt: string;
+    }[];
+    meta: {
+        limit: number;
+        page: number;
+        totalItems: number;
+        totalPages: number;
+    };
+}, "externalId" | "traceIdType">>
+Inherited from LangfuseCore.getDatasetRuns
+
+Defined in langfuse-core/lib/index.d.ts:4703
+getLibraryId
+getLibraryId(): string
+Returns string
+Overrides LangfuseCore.getLibraryId
+
+Defined in langfuse/src/langfuse.ts:91
+getLibraryVersion
+getLibraryVersion(): string
+Returns string
+Overrides LangfuseCore.getLibraryVersion
+
+Defined in langfuse/src/langfuse.ts:95
+getPersistedProperty
+getPersistedProperty<T>(key): undefined | T
+Type Parameters
+T
+Parameters
+key: LangfusePersistedProperty
+Returns undefined | T
+Overrides LangfuseCore.getPersistedProperty
+
+Defined in langfuse/src/langfuse.ts:65
+getPrompt
+getPrompt(name, version?, options?): Promise<TextPromptClient>
+Parameters
+name: string
+Optionalversion: number
+Optionaloptions: {
+    cacheTtlSeconds?: number;
+    fallback?: string;
+    fetchTimeoutMs?: number;
+    label?: string;
+    maxRetries?: number;
+    type?: "text";
+}
+OptionalcacheTtlSeconds?: number
+Optionalfallback?: string
+OptionalfetchTimeoutMs?: number
+Optionallabel?: string
+OptionalmaxRetries?: number
+Optionaltype?: "text"
+Returns Promise<TextPromptClient>
+Inherited from LangfuseCore.getPrompt
+
+Defined in langfuse-core/lib/index.d.ts:4812
+getPrompt(name, version?, options?): Promise<ChatPromptClient>
+Parameters
+name: string
+Optionalversion: number
+Optionaloptions: {
+    cacheTtlSeconds?: number;
+    fallback?: Omit<{
+        content: string;
+        role: string;
+    }, "externalId" | "traceIdType">[];
+    fetchTimeoutMs?: number;
+    label?: string;
+    maxRetries?: number;
+    type: "chat";
+}
+OptionalcacheTtlSeconds?: number
+Optionalfallback?: Omit<{
+    content: string;
+    role: string;
+}, "externalId" | "traceIdType">[]
+OptionalfetchTimeoutMs?: number
+Optionallabel?: string
+OptionalmaxRetries?: number
+type: "chat"
+Returns Promise<ChatPromptClient>
+Inherited from LangfuseCore.getPrompt
+
+Defined in langfuse-core/lib/index.d.ts:4820
+getPromptStateless
+getPromptStateless(name, version?, label?, maxRetries?, requestTimeout?): Promise<GetLangfusePromptResponse>
+Parameters
+name: string
+Optionalversion: number
+Optionallabel: string
+OptionalmaxRetries: number
+OptionalrequestTimeout: number
+Returns Promise<GetLangfusePromptResponse>
+Inherited from LangfuseCore.getPromptStateless
+
+Defined in langfuse-core/lib/index.d.ts:4729
+getSdkIntegration
+getSdkIntegration(): string
+Returns string
+Inherited from LangfuseCore.getSdkIntegration
+
+Defined in langfuse-core/lib/index.d.ts:4676
+on
+on(event, cb): (() => void)
+Parameters
+event: string
+cb: ((...args: any[]) => void)
+(...args): void
+Parameters
+Rest...args: any[]
+Returns void
+Returns (() => void)
+(): void
+Returns void
+Inherited from LangfuseCore.on
+
+Defined in langfuse-core/lib/index.d.ts:4678
+processQueueItems
+processQueueItems(queue, MAX_MSG_SIZE, BATCH_SIZE_LIMIT): {
+    processedItems: LangfuseQueueItem[];
+    remainingItems: LangfuseQueueItem[];
+}
+Parameters
+queue: LangfuseQueueItem[]
+MAX_MSG_SIZE: number
+BATCH_SIZE_LIMIT: number
+Returns {
+    processedItems: LangfuseQueueItem[];
+    remainingItems: LangfuseQueueItem[];
+}
+processedItems: LangfuseQueueItem[]
+remainingItems: LangfuseQueueItem[]
+Inherited from LangfuseCore.processQueueItems
+
+Defined in langfuse-core/lib/index.d.ts:4764
+resolveMediaReferences
+resolveMediaReferences<T>(params): Promise<T>
+Replaces the media reference strings in an object with base64 data URIs for the media content.
+
+This method recursively traverses an object (up to a maximum depth of 10) looking for media reference strings in the format "@@@langfuseMedia:...@@@". When found, it fetches the actual media content using the provided Langfuse client and replaces the reference string with a base64 data URI.
+
+If fetching media content fails for a reference string, a warning is logged and the reference string is left unchanged.
+
+Type Parameters
+T
+Parameters
+params: Omit<LangfuseMediaResolveMediaReferencesParams<T>, "langfuseClient">
+Configuration object
+
+Returns Promise<T>
+A deep copy of the input object with all media references replaced with base64 data URIs where possible
+
+Example
+const obj = {
+  image: "@@@langfuseMedia:type=image/jpeg|id=123|source=bytes@@@",
+  nested: {
+    pdf: "@@@langfuseMedia:type=application/pdf|id=456|source=bytes@@@"
+  }
+};
+
+const result = await LangfuseMedia.resolveMediaReferences({
+  obj,
+  langfuseClient
+});
+
+// Result:
+// {
+//   image: "data:image/jpeg;base64,/9j/4AAQSkZJRg...",
+//   nested: {
+//     pdf: "data:application/pdf;base64,JVBERi0xLjcK..."
+//   }
+// }
+Copy
+Inherited from LangfuseCore.resolveMediaReferences
+
+Defined in langfuse-core/lib/index.d.ts:4871
+score
+score(body): this
+Parameters
+body: Omit<{
+    comment?: null | string;
+    configId?: null | string;
+    dataType?: "NUMERIC" | "BOOLEAN" | "CATEGORICAL";
+    environment?: null | string;
+    id?: null | string;
+    name: string;
+    observationId?: null | string;
+    traceId: string;
+    value: string | number;
+}, "externalId" | "traceIdType">
+Returns this
+Inherited from LangfuseCore.score
+
+Defined in langfuse-core/lib/index.d.ts:4794
+setPersistedProperty
+setPersistedProperty<T>(key, value): void
+Type Parameters
+T
+Parameters
+key: LangfusePersistedProperty
+value: null | T
+Returns void
+Overrides LangfuseCore.setPersistedProperty
+
+Defined in langfuse/src/langfuse.ts:73
+shutdown
+shutdown(): void
+Returns void
+Inherited from LangfuseCore.shutdown
+
+Defined in langfuse-core/lib/index.d.ts:4780
+shutdownAsync
+shutdownAsync(): Promise<void>
+Returns Promise<void>
+Inherited from LangfuseCore.shutdownAsync
+
+Defined in langfuse-core/lib/index.d.ts:4778
+span
+span(body): LangfuseSpanClient
+Parameters
+body: Omit<{
+    endTime?: null | Date;
+    environment?: null | string;
+    id?: null | string;
+    input?: any;
+    level?:
+        | "DEBUG"
+        | "DEFAULT"
+        | "WARNING"
+        | "ERROR";
+    metadata?: any;
+    name?: null | string;
+    output?: any;
+    parentObservationId?: null | string;
+    startTime?: null | Date;
+    statusMessage?: null | string;
+    traceId?: null | string;
+    version?: null | string;
+}, "externalId" | "traceIdType">
+Returns LangfuseSpanClient
+Inherited from LangfuseCore.span
+
+Defined in langfuse-core/lib/index.d.ts:4791
+trace
+trace(body?): LangfuseTraceClient
+Parameters
+Optionalbody: Omit<{
+    environment?: null | string;
+    id?: null | string;
+    input?: any;
+    metadata?: any;
+    name?: null | string;
+    output?: any;
+    public?: null | boolean;
+    release?: null | string;
+    sessionId?: null | string;
+    tags?: null | string[];
+    timestamp?: null | Date;
+    userId?: null | string;
+    version?: null | string;
+}, "externalId" | "traceIdType">
+Returns LangfuseTraceClient
+Inherited from LangfuseCore.trace
+
+Defined in langfuse-core/lib/index.d.ts:4790
+updatePrompt
+updatePrompt(body): Promise<LangfusePromptClient>
+Parameters
+body: {
+    name: string;
+    newLabels: string[];
+    version: number;
+}
+name: string
+newLabels: string[]
+version: number
+Returns Promise<LangfusePromptClient>
+Inherited from LangfuseCore.updatePrompt
+
+Defined in langfuse-core/lib/index.d.ts:4807
+updatePromptStateless
+updatePromptStateless(body): Promise<LangfusePromptClient>
+Parameters
+body: Omit<{
+    newLabels: string[];
+}, "externalId" | "traceIdType"> & {
+    name: string;
+    version: number;
+}
+Returns Promise<LangfusePromptClient>
+Inherited from LangfuseCore.updatePromptStateless
+
+Defined in langfuse-core/lib/index.d.ts:4725

@@ -1,0 +1,54 @@
+Langfuse JS/TS SDKslangfuse-vercelLangfuseExporter
+Class LangfuseExporter
+Implements
+SpanExporter
+Defined in LangfuseExporter.ts:13
+Constructors
+constructor
+Properties
+langfuse
+Methods
+export
+forceFlush
+shutdown
+constructor
+new LangfuseExporter(params?): LangfuseExporter
+Parameters
+params: LangfuseExporterParams = {}
+Returns LangfuseExporter
+Defined in LangfuseExporter.ts:18
+Static
+langfuse
+langfuse: null | Langfuse = null
+Defined in LangfuseExporter.ts:14
+export
+export(allSpans, resultCallback): Promise<void>
+Called to export sampled ReadableSpans.
+
+Parameters
+allSpans: ReadableSpan[]
+resultCallback: ((result: ExportResult) => void)
+(result): void
+Parameters
+result: ExportResult
+Returns void
+Returns Promise<void>
+Implementation of SpanExporter.export
+
+Defined in LangfuseExporter.ts:36
+forceFlush
+forceFlush(): Promise<void>
+Immediately export all spans
+
+Returns Promise<void>
+Implementation of SpanExporter.forceFlush
+
+Defined in LangfuseExporter.ts:287
+shutdown
+shutdown(): Promise<void>
+Stops the exporter.
+
+Returns Promise<void>
+Implementation of SpanExporter.shutdown
+
+Defined in LangfuseExporter.ts:293

@@ -1,0 +1,499 @@
+[2025-03-24T02:05:17.625Z] [LangfuseExporter] exporting spans [
+  SpanImpl {
+    _spanContext: {
+      traceId: 'b6e1cddc17bdcd319ecc427f8702aa1c',
+      spanId: 'e6f11a4026bc5771',
+      traceFlags: 1,
+      traceState: undefined
+    },
+    kind: 2,
+    parentSpanContext: {
+      traceId: 'b6e1cddc17bdcd319ecc427f8702aa1c',
+      spanId: 'be5aeb4f78a75a83',
+      traceFlags: 1,
+      traceState: undefined
+    },
+    attributes: {
+      'http.request.method': 'POST',
+      'http.request.method_original': 'POST',
+      'url.full': 'https://api.openai.com/v1/chat/completions',
+      'url.path': '/v1/chat/completions',
+      'url.query': '',
+      'url.scheme': 'https',
+      'server.address': 'api.openai.com',
+      'server.port': 443,
+      'user_agent.original': 'node',
+      'network.peer.address': '172.66.0.243',
+      'network.peer.port': 443,
+      'http.response.status_code': 200
+    },
+    links: [],
+    events: [],
+    startTime: [ 1742781915, 272000000 ],
+    resource: ResourceImpl {
+      _rawAttributes: [Array],
+      _asyncAttributesPending: false,
+      _memoizedAttributes: undefined
+    },
+    instrumentationScope: {
+      name: '@opentelemetry/instrumentation-undici',
+      version: '0.11.0',
+      schemaUrl: undefined
+    },
+    _droppedAttributesCount: 0,
+    _droppedEventsCount: 0,
+    _droppedLinksCount: 0,
+    name: 'POST',
+    status: { code: 0 },
+    endTime: [ 1742781917, 298518458 ],
+    _ended: true,
+    _duration: [ 2, 26518458 ],
+    _spanProcessor: MultiSpanProcessor { _spanProcessors: [Array] },
+    _spanLimits: {
+      attributeValueLengthLimit: Infinity,
+      attributeCountLimit: 128,
+      linkCountLimit: 128,
+      eventCountLimit: 128,
+      attributePerEventCountLimit: 128,
+      attributePerLinkCountLimit: 128
+    },
+    _attributeValueLengthLimit: Infinity,
+    _performanceStartTime: 609.645208,
+    _performanceOffset: -0.792236328125,
+    _startTimeProvided: false
+  },
+  SpanImpl {
+    _spanContext: {
+      traceId: 'b6e1cddc17bdcd319ecc427f8702aa1c',
+      spanId: 'be5aeb4f78a75a83',
+      traceFlags: 1,
+      traceState: undefined
+    },
+    kind: 0,
+    parentSpanContext: {
+      traceId: 'b6e1cddc17bdcd319ecc427f8702aa1c',
+      spanId: '01d9ce2739dd48b8',
+      traceFlags: 1,
+      traceState: undefined
+    },
+    attributes: {
+      'operation.name': 'ai.generateText.doGenerate eaea0a78-ac1d-46c3-8274-d757fdef96b6',
+      'resource.name': 'eaea0a78-ac1d-46c3-8274-d757fdef96b6',
+      'ai.operationId': 'ai.generateText.doGenerate',
+      'ai.telemetry.functionId': 'eaea0a78-ac1d-46c3-8274-d757fdef96b6',
+      'ai.model.provider': 'openai.chat',
+      'ai.model.id': 'gpt-4o',
+      'ai.settings.maxRetries': 2,
+      'ai.telemetry.metadata.traceId': '7aa2659e-7be8-4110-8f5d-5cfdfdc88e0a',
+      'ai.telemetry.metadata.spanId': 'eaea0a78-ac1d-46c3-8274-d757fdef96b6',
+      'ai.telemetry.metadata.operationName': 'text-generation',
+      'ai.telemetry.metadata.model': 'gpt-4o',
+      'ai.telemetry.metadata.provider': 'openai',
+      'ai.telemetry.metadata.timestamp': '2025-03-24T02:05:15.254Z',
+      'ai.telemetry.metadata.prompt': 'Explain the benefits of AI telemetry systems in 3-4 sentences.',
+      'ai.prompt.format': 'prompt',
+      'ai.prompt.messages': '[{"role":"user","content":[{"type":"text","text":"Explain the benefits of AI telemetry systems in 3-4 sentences."}]}]',
+      'gen_ai.system': 'openai.chat',
+      'gen_ai.request.model': 'gpt-4o',
+      'ai.response.finishReason': 'stop',
+      'ai.response.text': 'AI telemetry systems offer several benefits, including enhanced data analysis and real-time monitoring capabilities. By leveraging machine learning algorithms, these systems can identify patterns and anomalies in vast datasets, enabling proactive maintenance and reducing downtime. They also improve decision-making by providing actionable insights and predictive analytics, which can optimize performance and resource allocation. Additionally, AI telemetry systems can automate routine tasks, freeing up human resources for more complex problem-solving activities.',
+      'ai.response.id': 'chatcmpl-BERTfghiVUr9Lfj72MoBZjEChqnly',
+      'ai.response.model': 'gpt-4o-2024-08-06',
+      'ai.response.timestamp': '2025-03-24T02:05:15.000Z',
+      'ai.usage.promptTokens': 21,
+      'ai.usage.completionTokens': 84,
+      'gen_ai.response.finish_reasons': [Array],
+      'gen_ai.response.id': 'chatcmpl-BERTfghiVUr9Lfj72MoBZjEChqnly',
+      'gen_ai.response.model': 'gpt-4o-2024-08-06',
+      'gen_ai.usage.input_tokens': 21,
+      'gen_ai.usage.output_tokens': 84
+    },
+    links: [],
+    events: [],
+    startTime: [ 1742781915, 256000000 ],
+    resource: ResourceImpl {
+      _rawAttributes: [Array],
+      _asyncAttributesPending: false,
+      _memoizedAttributes: undefined
+    },
+    instrumentationScope: { name: 'ai', version: undefined, schemaUrl: undefined },
+    _droppedAttributesCount: 0,
+    _droppedEventsCount: 0,
+    _droppedLinksCount: 0,
+    name: 'ai.generateText.doGenerate',
+    status: { code: 0 },
+    endTime: [ 1742781917, 305220334 ],
+    _ended: true,
+    _duration: [ 2, 49220334 ],
+    _spanProcessor: MultiSpanProcessor { _spanProcessors: [Array] },
+    _spanLimits: {
+      attributeValueLengthLimit: Infinity,
+      attributeCountLimit: 128,
+      linkCountLimit: 128,
+      eventCountLimit: 128,
+      attributePerEventCountLimit: 128,
+      attributePerLinkCountLimit: 128
+    },
+    _attributeValueLengthLimit: Infinity,
+    _performanceStartTime: 593.663541,
+    _performanceOffset: -0.810546875,
+    _startTimeProvided: false
+  },
+  SpanImpl {
+    _spanContext: {
+      traceId: 'b6e1cddc17bdcd319ecc427f8702aa1c',
+      spanId: '01d9ce2739dd48b8',
+      traceFlags: 1,
+      traceState: undefined
+    },
+    kind: 0,
+    parentSpanContext: undefined,
+    attributes: {
+      'operation.name': 'ai.generateText eaea0a78-ac1d-46c3-8274-d757fdef96b6',
+      'resource.name': 'eaea0a78-ac1d-46c3-8274-d757fdef96b6',
+      'ai.operationId': 'ai.generateText',
+      'ai.telemetry.functionId': 'eaea0a78-ac1d-46c3-8274-d757fdef96b6',
+      'ai.model.provider': 'openai.chat',
+      'ai.model.id': 'gpt-4o',
+      'ai.settings.maxRetries': 2,
+      'ai.telemetry.metadata.traceId': '7aa2659e-7be8-4110-8f5d-5cfdfdc88e0a',
+      'ai.telemetry.metadata.spanId': 'eaea0a78-ac1d-46c3-8274-d757fdef96b6',
+      'ai.telemetry.metadata.operationName': 'text-generation',
+      'ai.telemetry.metadata.model': 'gpt-4o',
+      'ai.telemetry.metadata.provider': 'openai',
+      'ai.telemetry.metadata.timestamp': '2025-03-24T02:05:15.254Z',
+      'ai.telemetry.metadata.prompt': 'Explain the benefits of AI telemetry systems in 3-4 sentences.',
+      'ai.prompt': '{"prompt":"Explain the benefits of AI telemetry systems in 3-4 sentences."}',
+      'ai.settings.maxSteps': 1,
+      'ai.response.finishReason': 'stop',
+      'ai.response.text': 'AI telemetry systems offer several benefits, including enhanced data analysis and real-time monitoring capabilities. By leveraging machine learning algorithms, these systems can identify patterns and anomalies in vast datasets, enabling proactive maintenance and reducing downtime. They also improve decision-making by providing actionable insights and predictive analytics, which can optimize performance and resource allocation. Additionally, AI telemetry systems can automate routine tasks, freeing up human resources for more complex problem-solving activities.',
+      'ai.usage.promptTokens': 21,
+      'ai.usage.completionTokens': 84
+    },
+    links: [],
+    events: [],
+    startTime: [ 1742781915, 255000000 ],
+    resource: ResourceImpl {
+      _rawAttributes: [Array],
+      _asyncAttributesPending: false,
+      _memoizedAttributes: undefined
+    },
+    instrumentationScope: { name: 'ai', version: undefined, schemaUrl: undefined },
+    _droppedAttributesCount: 0,
+    _droppedEventsCount: 0,
+    _droppedLinksCount: 0,
+    name: 'ai.generateText',
+    status: { code: 0 },
+    endTime: [ 1742781917, 305948458 ],
+    _ended: true,
+    _duration: [ 2, 50948458 ],
+    _spanProcessor: MultiSpanProcessor { _spanProcessors: [Array] },
+    _spanLimits: {
+      attributeValueLengthLimit: Infinity,
+      attributeCountLimit: 128,
+      linkCountLimit: 128,
+      eventCountLimit: 128,
+      attributePerEventCountLimit: 128,
+      attributePerLinkCountLimit: 128
+    },
+    _attributeValueLengthLimit: Infinity,
+    _performanceStartTime: 592.426875,
+    _performanceOffset: -0.57373046875,
+    _startTimeProvided: false
+  },
+  SpanImpl {
+    _spanContext: {
+      traceId: 'c1081a3963f6ebb6412b53c74f491cdb',
+      spanId: 'a4040d5579cbc28a',
+      traceFlags: 1,
+      traceState: undefined
+    },
+    kind: 2,
+    parentSpanContext: undefined,
+    attributes: {
+      'http.request.method': 'GET',
+      'http.request.method_original': 'GET',
+      'url.full': 'https://langfuse.planb.wekeepgrowing.com/api/public/traces/7aa2659e-7be8-4110-8f5d-5cfdfdc88e0a',
+      'url.path': '/api/public/traces/7aa2659e-7be8-4110-8f5d-5cfdfdc88e0a',
+      'url.query': '',
+      'url.scheme': 'https',
+      'server.address': 'langfuse.planb.wekeepgrowing.com',
+      'server.port': 443,
+      'user_agent.original': 'node',
+      'network.peer.address': '218.154.15.73',
+      'network.peer.port': 443,
+      'http.response.status_code': 404,
+      'http.response.header.content-length': 124
+    },
+    links: [],
+    events: [],
+    startTime: [ 1742781917, 312000000 ],
+    resource: ResourceImpl {
+      _rawAttributes: [Array],
+      _asyncAttributesPending: false,
+      _memoizedAttributes: undefined
+    },
+    instrumentationScope: {
+      name: '@opentelemetry/instrumentation-undici',
+      version: '0.11.0',
+      schemaUrl: undefined
+    },
+    _droppedAttributesCount: 0,
+    _droppedEventsCount: 0,
+    _droppedLinksCount: 0,
+    name: 'GET',
+    status: { code: 2 },
+    endTime: [ 1742781917, 379919333 ],
+    _ended: true,
+    _duration: [ 0, 67919333 ],
+    _spanProcessor: MultiSpanProcessor { _spanProcessors: [Array] },
+    _spanLimits: {
+      attributeValueLengthLimit: Infinity,
+      attributeCountLimit: 128,
+      linkCountLimit: 128,
+      eventCountLimit: 128,
+      attributePerEventCountLimit: 128,
+      attributePerLinkCountLimit: 128
+    },
+    _attributeValueLengthLimit: Infinity,
+    _performanceStartTime: 2649.694125,
+    _performanceOffset: -0.841064453125,
+    _startTimeProvided: false
+  },
+  SpanImpl {
+    _spanContext: {
+      traceId: 'f470bfc05eb5cccd2d7d662c5a015372',
+      spanId: 'd83af407cc3c9f17',
+      traceFlags: 1,
+      traceState: undefined
+    },
+    kind: 2,
+    parentSpanContext: undefined,
+    attributes: {
+      'http.request.method': 'GET',
+      'http.request.method_original': 'GET',
+      'url.full': 'https://langfuse.planb.wekeepgrowing.com/api/public/traces/7aa2659e-7be8-4110-8f5d-5cfdfdc88e0a',
+      'url.path': '/api/public/traces/7aa2659e-7be8-4110-8f5d-5cfdfdc88e0a',
+      'url.query': '',
+      'url.scheme': 'https',
+      'server.address': 'langfuse.planb.wekeepgrowing.com',
+      'server.port': 443,
+      'user_agent.original': 'node',
+      'network.peer.address': '218.154.15.73',
+      'network.peer.port': 443,
+      'http.response.status_code': 404,
+      'http.response.header.content-length': 124
+    },
+    links: [],
+    events: [],
+    startTime: [ 1742781917, 309000000 ],
+    resource: ResourceImpl {
+      _rawAttributes: [Array],
+      _asyncAttributesPending: false,
+      _memoizedAttributes: undefined
+    },
+    instrumentationScope: {
+      name: '@opentelemetry/instrumentation-undici',
+      version: '0.11.0',
+      schemaUrl: undefined
+    },
+    _droppedAttributesCount: 0,
+    _droppedEventsCount: 0,
+    _droppedLinksCount: 0,
+    name: 'GET',
+    status: { code: 2 },
+    endTime: [ 1742781917, 383750875 ],
+    _ended: true,
+    _duration: [ 0, 74750875 ],
+    _spanProcessor: MultiSpanProcessor { _spanProcessors: [Array] },
+    _spanLimits: {
+      attributeValueLengthLimit: Infinity,
+      attributeCountLimit: 128,
+      linkCountLimit: 128,
+      eventCountLimit: 128,
+      attributePerEventCountLimit: 128,
+      attributePerLinkCountLimit: 128
+    },
+    _attributeValueLengthLimit: Infinity,
+    _performanceStartTime: 2645.963458,
+    _performanceOffset: -0.1103515625,
+    _startTimeProvided: false
+  },
+  SpanImpl {
+    _spanContext: {
+      traceId: '34cc852600f8e3d3961bd14498a03e1c',
+      spanId: '7a32cea2ddec72c1',
+      traceFlags: 1,
+      traceState: undefined
+    },
+    kind: 2,
+    parentSpanContext: undefined,
+    attributes: {
+      'http.request.method': 'GET',
+      'http.request.method_original': 'GET',
+      'url.full': 'https://langfuse.planb.wekeepgrowing.com/api/public/traces/7aa2659e-7be8-4110-8f5d-5cfdfdc88e0a',
+      'url.path': '/api/public/traces/7aa2659e-7be8-4110-8f5d-5cfdfdc88e0a',
+      'url.query': '',
+      'url.scheme': 'https',
+      'server.address': 'langfuse.planb.wekeepgrowing.com',
+      'server.port': 443,
+      'user_agent.original': 'node',
+      'network.peer.address': '218.154.15.73',
+      'network.peer.port': 443,
+      'http.response.status_code': 404,
+      'http.response.header.content-length': 124
+    },
+    links: [],
+    events: [],
+    startTime: [ 1742781917, 311000000 ],
+    resource: ResourceImpl {
+      _rawAttributes: [Array],
+      _asyncAttributesPending: false,
+      _memoizedAttributes: undefined
+    },
+    instrumentationScope: {
+      name: '@opentelemetry/instrumentation-undici',
+      version: '0.11.0',
+      schemaUrl: undefined
+    },
+    _droppedAttributesCount: 0,
+    _droppedEventsCount: 0,
+    _droppedLinksCount: 0,
+    name: 'GET',
+    status: { code: 2 },
+    endTime: [ 1742781917, 386240542 ],
+    _ended: true,
+    _duration: [ 0, 75240542 ],
+    _spanProcessor: MultiSpanProcessor { _spanProcessors: [Array] },
+    _spanLimits: {
+      attributeValueLengthLimit: Infinity,
+      attributeCountLimit: 128,
+      linkCountLimit: 128,
+      eventCountLimit: 128,
+      attributePerEventCountLimit: 128,
+      attributePerLinkCountLimit: 128
+    },
+    _attributeValueLengthLimit: Infinity,
+    _performanceStartTime: 2648.169916,
+    _performanceOffset: -0.31689453125,
+    _startTimeProvided: false
+  },
+  SpanImpl {
+    _spanContext: {
+      traceId: '26c2cab8147c5abef1e4a986fa162c3f',
+      spanId: '17057ee86df95f8f',
+      traceFlags: 1,
+      traceState: undefined
+    },
+    kind: 2,
+    parentSpanContext: undefined,
+    attributes: {
+      'http.request.method': 'POST',
+      'http.request.method_original': 'POST',
+      'url.full': 'https://langfuse.planb.wekeepgrowing.com/api/public/ingestion',
+      'url.path': '/api/public/ingestion',
+      'url.query': '',
+      'url.scheme': 'https',
+      'server.address': 'langfuse.planb.wekeepgrowing.com',
+      'server.port': 443,
+      'user_agent.original': 'node',
+      'network.peer.address': '218.154.15.73',
+      'network.peer.port': 443,
+      'http.response.status_code': 207,
+      'http.response.header.content-length': 440
+    },
+    links: [],
+    events: [],
+    startTime: [ 1742781917, 382000000 ],
+    resource: ResourceImpl {
+      _rawAttributes: [Array],
+      _asyncAttributesPending: false,
+      _memoizedAttributes: undefined
+    },
+    instrumentationScope: {
+      name: '@opentelemetry/instrumentation-undici',
+      version: '0.11.0',
+      schemaUrl: undefined
+    },
+    _droppedAttributesCount: 0,
+    _droppedEventsCount: 0,
+    _droppedLinksCount: 0,
+    name: 'POST',
+    status: { code: 0 },
+    endTime: [ 1742781917, 512057709 ],
+    _ended: true,
+    _duration: [ 0, 130057709 ],
+    _spanProcessor: MultiSpanProcessor { _spanProcessors: [Array] },
+    _spanLimits: {
+      attributeValueLengthLimit: Infinity,
+      attributeCountLimit: 128,
+      linkCountLimit: 128,
+      eventCountLimit: 128,
+      attributePerEventCountLimit: 128,
+      attributePerLinkCountLimit: 128
+    },
+    _attributeValueLengthLimit: Infinity,
+    _performanceStartTime: 2719.688916,
+    _performanceOffset: -0.8359375,
+    _startTimeProvided: false
+  },
+  SpanImpl {
+    _spanContext: {
+      traceId: '6ff3c145f62b5d49ccbf0eaa3eed8e08',
+      spanId: 'f05410173d71acc3',
+      traceFlags: 1,
+      traceState: undefined
+    },
+    kind: 2,
+    parentSpanContext: undefined,
+    attributes: {
+      'http.request.method': 'POST',
+      'http.request.method_original': 'POST',
+      'url.full': 'https://langfuse.planb.wekeepgrowing.com/api/public/ingestion',
+      'url.path': '/api/public/ingestion',
+      'url.query': '',
+      'url.scheme': 'https',
+      'server.address': 'langfuse.planb.wekeepgrowing.com',
+      'server.port': 443,
+      'user_agent.original': 'node',
+      'network.peer.address': '218.154.15.73',
+      'network.peer.port': 443,
+      'http.response.status_code': 207,
+      'http.response.header.content-length': 145
+    },
+    links: [],
+    events: [],
+    startTime: [ 1742781917, 515000000 ],
+    resource: ResourceImpl {
+      _rawAttributes: [Array],
+      _asyncAttributesPending: false,
+      _memoizedAttributes: undefined
+    },
+    instrumentationScope: {
+      name: '@opentelemetry/instrumentation-undici',
+      version: '0.11.0',
+      schemaUrl: undefined
+    },
+    _droppedAttributesCount: 0,
+    _droppedEventsCount: 0,
+    _droppedLinksCount: 0,
+    name: 'POST',
+    status: { code: 0 },
+    endTime: [ 1742781917, 620189791 ],
+    _ended: true,
+    _duration: [ 0, 105189791 ],
+    _spanProcessor: MultiSpanProcessor { _spanProcessors: [Array] },
+    _spanLimits: {
+      attributeValueLengthLimit: Infinity,
+      attributeCountLimit: 128,
+      linkCountLimit: 128,
+      eventCountLimit: 128,
+      attributePerEventCountLimit: 128,
+      attributePerLinkCountLimit: 128
+    },
+    _attributeValueLengthLimit: Infinity,
+    _performanceStartTime: 2852.432375,
+    _performanceOffset: -0.579345703125,
+    _startTimeProvided: false
+  }
+]
