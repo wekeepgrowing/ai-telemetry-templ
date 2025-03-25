@@ -27,7 +27,8 @@ export {
   createStreamingSpan,
   completeStreamingSpan,
   updateStreamingTelemetry,
-  recordStreamingProgress
+  recordStreamingProgress,
+  TraceManager // Export TraceManager type for use in function signatures
 } from './telemetry';
 
 // Set up a default OpenAI model

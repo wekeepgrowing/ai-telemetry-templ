@@ -37,7 +37,7 @@ async function runStreamExample() {
       model: anthropic("claude-3-5-haiku-latest"),
       prompt: textPrompt,
       // Telemetry options
-      traceId: traceId,
+      traceManager: traceManager,
       operationName: 'text-streaming-example',
       parentSpanId: textStreamingSpanId,
       metadata: {
@@ -94,8 +94,7 @@ async function runStreamExample() {
       model: anthropic("claude-3-5-haiku-latest"),
       schema: storySchema,
       prompt: "Generate a short story about debugging an AI model.",
-      // Telemetry options
-      traceId: traceId,
+      traceManager: traceManager,
       operationName: 'object-streaming-example',
       parentSpanId: objectStreamingSpanId,
       metadata: {
