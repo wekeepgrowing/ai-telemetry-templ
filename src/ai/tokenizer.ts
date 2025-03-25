@@ -5,7 +5,7 @@
  * and context management.
  */
 
-import { getEncoding } from 'js-tiktoken';
+import { getEncoding, TiktokenEncoding } from 'js-tiktoken';
 import { config } from '../config';
 
 // Tokenizer registry to support different model families
@@ -20,7 +20,7 @@ export enum ModelFamily {
 }
 
 // Mapping model families to their appropriate encodings
-const encodingMap: Record<ModelFamily, string> = {
+const encodingMap: Record<ModelFamily, TiktokenEncoding> = {
   [ModelFamily.GPT]: 'cl100k_base',     // For GPT-3.5 / GPT-4 models
   [ModelFamily.CLAUDE]: 'cl100k_base',  // Best approximation for Claude models
   [ModelFamily.LLAMA]: 'cl100k_base',   // Approximation for LLaMA
@@ -43,11 +43,11 @@ const encoderCache: Record<string, any> = {};
  */
 function getEncoderForModelFamily(modelFamily: ModelFamily = DEFAULT_MODEL_FAMILY): any {
   const encodingKey = encodingMap[modelFamily];
-  
+
   if (!encoderCache[encodingKey]) {
     encoderCache[encodingKey] = getEncoding(encodingKey);
   }
-  
+
   return encoderCache[encodingKey];
 }
 
@@ -59,7 +59,7 @@ function getEncoderForModelFamily(modelFamily: ModelFamily = DEFAULT_MODEL_FAMIL
  */
 export function detectModelFamily(modelName: string): ModelFamily {
   const lowerModel = modelName.toLowerCase();
-  
+
   if (lowerModel.includes('gpt')) {
     return ModelFamily.GPT;
   } else if (lowerModel.includes('claude')) {
@@ -73,7 +73,7 @@ export function detectModelFamily(modelName: string): ModelFamily {
   } else if (lowerModel.includes('cohere') || lowerModel.includes('command')) {
     return ModelFamily.COHERE;
   }
-  
+
   // Default to GPT as fallback
   return DEFAULT_MODEL_FAMILY;
 }
@@ -87,10 +87,10 @@ export function detectModelFamily(modelName: string): ModelFamily {
  */
 export function countTokens(text: string, modelFamily?: ModelFamily): number {
   if (!text) return 0;
-  
+
   const family = modelFamily || DEFAULT_MODEL_FAMILY;
   const encoder = getEncoderForModelFamily(family);
-  
+
   return encoder.encode(text).length;
 }
 
@@ -128,7 +128,7 @@ export function trimPrompt(
 
   const family = modelFamily || DEFAULT_MODEL_FAMILY;
   const length = countTokens(prompt, family);
-  
+
   if (length <= contextSize) {
     return prompt;
   }
@@ -136,7 +136,7 @@ export function trimPrompt(
   const overflowTokens = length - contextSize;
   // On average it's 3-4 characters per token, so multiply by 3.5 to get approximate characters
   const chunkSize = prompt.length - Math.ceil(overflowTokens * 3.5);
-  
+
   if (chunkSize < MIN_CHUNK_SIZE) {
     return prompt.slice(0, MIN_CHUNK_SIZE);
   }
@@ -149,7 +149,7 @@ export function trimPrompt(
     chunkSize,
     chunkOverlap: 0,
   });
-  
+
   const trimmedPrompt = splitter.splitText(prompt)[0] ?? '';
 
   // Last catch: if the trimmed prompt is same length as original,
@@ -172,7 +172,7 @@ export function clearEncoderCache(): void {
       encoderCache[key].free();
     }
   });
-  
+
   Object.keys(encoderCache).forEach(key => {
     delete encoderCache[key];
   });

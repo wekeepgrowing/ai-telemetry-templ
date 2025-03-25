@@ -8,7 +8,6 @@ import { model, shutdownTelemetry, createTraceManager } from '../ai';
 import { generateTextWithTelemetry, generateObjectWithTelemetry } from '../ai/telemetry-wrappers';
 import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
-import {generateObject} from "ai";
 
 async function runImprovedTelemetryDemo() {
   console.log('Starting Improved AI Telemetry Demo...');
@@ -31,12 +30,12 @@ async function runImprovedTelemetryDemo() {
     const textPrompt = "Explain the benefits of AI telemetry systems in 3-4 sentences.";
     console.log(`\nGenerating text with prompt: "${textPrompt}"`);
 
-    // Use the wrapper function directly
+    // Use the wrapper function with traceManager
     const textResult = await generateTextWithTelemetry({
       model: model,
       prompt: textPrompt,
       // Telemetry options
-      traceId: traceId,
+      traceManager: traceManager,  // Pass the traceManager directly
       operationName: 'text-generation',
       parentSpanId: textSpanId,
       metadata: {
@@ -74,13 +73,13 @@ async function runImprovedTelemetryDemo() {
 
     console.log('\nGenerating a structured recipe object...');
 
-    // Use the wrapper function directly
+    // Use the wrapper function with traceManager
     const objectResult = await generateObjectWithTelemetry({
       model: model,
       schema: recipeSchema,
       prompt: "Generate a simple pasta recipe with garlic and tomatoes.",
       // Telemetry options
-      traceId: traceId,
+      traceManager: traceManager,  // Pass the traceManager directly
       operationName: 'object-generation',
       parentSpanId: objectSpanId,
       metadata: {
