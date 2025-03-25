@@ -36,6 +36,15 @@ export const config = {
       baseUrl: env.LANGFUSE_BASEURL,
     },
   },
+
+  // Logging configuration
+  logging: {
+    level: env.LOG_LEVEL || (env.NODE_ENV === 'development' ? 'debug' : 'info'),
+    enableFileLogging: env.ENABLE_FILE_LOGGING,
+    logDir: env.LOG_DIR || 'logs',
+    maxSize: env.LOG_MAX_SIZE || '20m',
+    maxFiles: env.LOG_MAX_FILES || '14d',
+  },
 };
 
 // Export environment for direct access if needed

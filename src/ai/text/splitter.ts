@@ -2,6 +2,8 @@
  * Text splitting utilities for handling large text inputs
  */
 
+import { logger } from '../../utils/logger';
+
 interface TextSplitterParams {
   chunkSize: number;
   chunkOverlap: number;
@@ -52,8 +54,8 @@ abstract class TextSplitter implements TextSplitterParams {
       const _len = d.length;
       if (total + _len >= this.chunkSize) {
         if (total > this.chunkSize) {
-          console.warn(
-            `Created a chunk of size ${total}, which is longer than the specified ${this.chunkSize}`,
+          logger.warn(
+            `Created a chunk of size ${total}, which is longer than the specified ${this.chunkSize}`
           );
         }
         if (currentDoc.length > 0) {

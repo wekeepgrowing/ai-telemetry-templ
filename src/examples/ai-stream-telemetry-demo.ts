@@ -9,9 +9,10 @@ import { createTraceManager, shutdownTelemetry } from '../ai';
 import { streamTextWithTelemetry, streamObjectWithTelemetry } from '../ai/telemetry-wrappers';
 import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
+import { logger } from '../utils/logger';
 
 async function runStreamExample() {
-  console.log('Running text stream example...');
+  logger.info('Running text stream example...');
 
   // Create a trace for this example
   const { traceManager, traceId } = createTraceManager('stream-telemetry-demo', {
@@ -19,7 +20,7 @@ async function runStreamExample() {
     timestamp: new Date().toISOString()
   });
 
-  console.log(`Created trace: ${traceId}`);
+  logger.info(`Created trace: ${traceId}`);
 
   // Create a span for the text streaming operation
   const textStreamingSpanId = traceManager.startSpan('text-streaming-test', {
@@ -28,7 +29,7 @@ async function runStreamExample() {
   });
 
   const textPrompt = "Write a short story about an AI assistant who helps a programmer debug their code. Make it funny.";
-  console.log(`\nStreaming text with prompt: "${textPrompt}"`);
+  logger.info(`Streaming text with prompt: "${textPrompt}"`);
 
   try {
     // Use the wrapper function for streaming text
@@ -45,7 +46,7 @@ async function runStreamExample() {
       }
     });
 
-    console.log('\nStreaming text chunks:');
+    logger.info('Streaming text chunks:');
 
     let fullText = '';
     for await (const chunk of textResult.textStream) {
@@ -53,7 +54,7 @@ async function runStreamExample() {
       fullText += chunk;
     }
 
-    console.log('\n\nFinal text length:', fullText.length);
+    logger.info(`\nFinal text length: ${fullText.length}`);
 
     // End the streaming span
     traceManager.endSpan(textStreamingSpanId, {
@@ -63,7 +64,7 @@ async function runStreamExample() {
     });
 
     // Now demonstrate object streaming
-    console.log('\nRunning object stream example...');
+    logger.info('Running object stream example...');
 
     // Create a span for the object streaming operation
     const objectStreamingSpanId = traceManager.startSpan('object-streaming-test', {
@@ -86,7 +87,7 @@ async function runStreamExample() {
       })
     });
 
-    console.log('\nStreaming a structured story object...');
+    logger.info('Streaming a structured story object...');
 
     // Use the wrapper function for streaming objects
     const objectResult = await streamObjectWithTelemetry({
@@ -103,7 +104,7 @@ async function runStreamExample() {
       }
     });
 
-    console.log('\nStreaming object updates:');
+    logger.info('Streaming object updates:');
 
     for await (const partialObject of objectResult.partialObjectStream) {
       // Clear console and show latest object state
@@ -111,9 +112,9 @@ async function runStreamExample() {
       console.log(JSON.stringify(partialObject, null, 2));
     }
 
-    console.log('\nFinal object result:');
+    logger.info('Final object result:');
     const finalObject = await objectResult.object;
-    console.log(JSON.stringify(finalObject, null, 2));
+    logger.debug(JSON.stringify(finalObject, null, 2));
 
     // End the streaming span
     traceManager.endSpan(objectStreamingSpanId, {
@@ -127,11 +128,11 @@ async function runStreamExample() {
       completedAt: new Date().toISOString()
     });
 
-    console.log(`\nTrace ${traceId} completed successfully.`);
-    console.log('Telemetry data has been sent to Langfuse.');
+    logger.info(`Trace ${traceId} completed successfully.`);
+    logger.info('Telemetry data has been sent to Langfuse.');
 
   } catch (error) {
-    console.error('Error in streaming examples:', error);
+    logger.error('Error in streaming examples:', { error });
 
     // End spans in case of error
     traceManager.endSpan(textStreamingSpanId, {
@@ -148,7 +149,7 @@ async function runStreamExample() {
   } finally {
     // Always shut down telemetry to flush all pending events
     await shutdownTelemetry();
-    console.log('Telemetry shut down. Stream example complete.');
+    logger.info('Telemetry shut down. Stream example complete.');
   }
 }
 
@@ -158,7 +159,7 @@ if (require.main === module) {
   const exampleType = process.argv[2] || 'both';
 
   if (exampleType === 'console' || exampleType === 'both') {
-    runStreamExample().catch(console.error);
+    runStreamExample().catch(error => logger.error('Uncaught error:', { error }));
   }
 }
 

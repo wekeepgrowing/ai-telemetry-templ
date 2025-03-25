@@ -35,6 +35,8 @@
     "langfuse": "^3.37.0",
     "langfuse-vercel": "^3.37.0",
     "uuid": "^11.1.0",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

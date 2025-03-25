@@ -26,6 +26,13 @@ const envSchema = z.object({
   LANGFUSE_SECRET_KEY: z.string().optional(),
   LANGFUSE_BASEURL: z.string().url().optional(),
   ENABLE_TELEMETRY: z.string().transform(val => val === 'true').default('true'),
+
+  // Logging configuration
+  LOG_LEVEL: z.enum(['error', 'warn', 'info', 'http', 'debug', 'trace']).optional(),
+  ENABLE_FILE_LOGGING: z.string().transform(val => val === 'true').default('false'),
+  LOG_DIR: z.string().optional(),
+  LOG_MAX_SIZE: z.string().optional(),
+  LOG_MAX_FILES: z.string().optional(),
 });
 
 // Parse environment variables with validation

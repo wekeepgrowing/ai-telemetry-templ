@@ -8,9 +8,10 @@ import { model, shutdownTelemetry, createTraceManager } from '../ai';
 import { generateTextWithTelemetry, generateObjectWithTelemetry } from '../ai/telemetry-wrappers';
 import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
+import { logger } from '../utils/logger';
 
 async function runImprovedTelemetryDemo() {
-  console.log('Starting Improved AI Telemetry Demo...');
+  logger.info('Starting Improved AI Telemetry Demo...');
 
   try {
     // Create a trace manager for this session
@@ -19,7 +20,7 @@ async function runImprovedTelemetryDemo() {
       timestamp: new Date().toISOString()
     });
 
-    console.log(`Created trace: ${traceId}`);
+    logger.info(`Created trace: ${traceId}`);
 
     // 1. Simple text generation with telemetry
     const textSpanId = traceManager.startSpan('text-generation', {
@@ -28,7 +29,7 @@ async function runImprovedTelemetryDemo() {
     });
 
     const textPrompt = "Explain the benefits of AI telemetry systems in 3-4 sentences.";
-    console.log(`\nGenerating text with prompt: "${textPrompt}"`);
+    logger.info(`Generating text with prompt: "${textPrompt}"`);
 
     // Use the wrapper function with traceManager
     const textResult = await generateTextWithTelemetry({
@@ -44,8 +45,8 @@ async function runImprovedTelemetryDemo() {
       }
     });
 
-    console.log('\nGenerated Text:');
-    console.log(textResult.text);
+    logger.info('Generated Text:');
+    logger.info(textResult.text);
 
     // End the operation span
     traceManager.endSpan(textSpanId, {
@@ -71,7 +72,7 @@ async function runImprovedTelemetryDemo() {
       })
     });
 
-    console.log('\nGenerating a structured recipe object...');
+    logger.info('Generating a structured recipe object...');
 
     // Use the wrapper function with traceManager
     const objectResult = await generateObjectWithTelemetry({
@@ -88,8 +89,8 @@ async function runImprovedTelemetryDemo() {
       }
     });
 
-    console.log('\nGenerated Recipe Object:');
-    console.log(JSON.stringify(objectResult.object, null, 2));
+    logger.info('Generated Recipe Object:');
+    logger.info(JSON.stringify(objectResult.object, null, 2));
 
     // End the operation span
     traceManager.endSpan(objectSpanId, {
@@ -103,21 +104,21 @@ async function runImprovedTelemetryDemo() {
       completedAt: new Date().toISOString()
     });
 
-    console.log(`\nTrace ${traceId} completed successfully.`);
-    console.log('Telemetry data has been sent to Langfuse.');
+    logger.info(`Trace ${traceId} completed successfully.`);
+    logger.info('Telemetry data has been sent to Langfuse.');
 
   } catch (error) {
-    console.error('Error in AI Telemetry Demo:', error);
+    logger.error('Error in AI Telemetry Demo:', { error });
   } finally {
     // Always shut down telemetry to flush all pending events
     await shutdownTelemetry();
-    console.log('Telemetry shut down. Demo complete.');
+    logger.info('Telemetry shut down. Demo complete.');
   }
 }
 
 // Run the demo if this file is executed directly
 if (require.main === module) {
-  runImprovedTelemetryDemo().catch(console.error);
+  runImprovedTelemetryDemo().catch(error => logger.error('Uncaught error:', { error }));
 }
 
 export { runImprovedTelemetryDemo };

@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Langfuse } from "langfuse";
 
 import { config } from '../config';
+import { logger } from '../utils/logger';
 
 // Maps to track active traces, spans, and generations
 const activeTraces = new Map<string, boolean>();
@@ -32,7 +33,7 @@ export const initializeTelemetry = () => {
     const secretKey = config.telemetry.langfuse.secretKey;
 
     if (!publicKey || !secretKey) {
-      console.warn('Langfuse keys not configured. Telemetry disabled.');
+      logger.warn('Langfuse keys not configured. Telemetry disabled.');
       return {
         sdk: null,
         langfuse: null,
@@ -49,13 +50,13 @@ export const initializeTelemetry = () => {
       flushAtExit: true,
     });
 
-    console.log('Langfuse telemetry initialized successfully');
+    logger.info('Langfuse telemetry initialized successfully');
     return {
       langfuse,
       isEnabled: true,
     };
   } catch (error) {
-    console.error('Failed to initialize telemetry:', error);
+    logger.error('Failed to initialize telemetry:', { error });
     return {
       langfuse: null,
       isEnabled: false,
@@ -139,7 +140,7 @@ export class TraceManager {
 
     // Check for duplicate trace
     if (!existingTraceId && activeTraces.has(this.traceId)) {
-      console.warn(`[Telemetry] Trace with ID ${this.traceId} already exists, reusing it`);
+      logger.warn(`Trace with ID ${this.traceId} already exists, reusing it`);
     } else {
       activeTraces.set(this.traceId, true);
     }
@@ -166,7 +167,7 @@ export class TraceManager {
     }
 
     try {
-      console.log(`[Telemetry] Creating root trace: ${this.traceId}, name: ${this.name}`);
+      logger.debug(`Creating root trace: ${this.traceId}, name: ${this.name}`);
 
       // Store the trace client for future updates
       this.traceClient = telemetry.langfuse.trace({
@@ -184,7 +185,7 @@ export class TraceManager {
 
       return this.traceId;
     } catch (error) {
-      console.error('Failed to create root trace:', error);
+      logger.error('Failed to create root trace:', { error });
       return this.traceId;
     }
   }
@@ -222,7 +223,7 @@ export class TraceManager {
 
       // Check if span already exists
       if (activeSpans.has(spanId)) {
-        console.log(`[Telemetry] Span ${spanId} already exists, updating it`);
+        logger.debug(`Span ${spanId} already exists, updating it`);
 
         const existingSpan = this.activeSpans.get(spanId);
         if (existingSpan && typeof existingSpan.update === 'function') {
@@ -237,7 +238,7 @@ export class TraceManager {
         return spanId;
       }
 
-      console.log(`[Telemetry] Creating new span: ${spanId}, name: ${name}, traceId: ${this.traceId}`);
+      logger.debug(`Creating new span: ${spanId}, name: ${name}, traceId: ${this.traceId}`);
 
       const span = telemetry.langfuse.span({
         id: spanId,
@@ -254,7 +255,7 @@ export class TraceManager {
       this.activeSpans.set(spanId, span);
       return spanId;
     } catch (error) {
-      console.error(`Failed to start span "${name}":`, error);
+      logger.error(`Failed to start span "${name}":`, { error });
       const spanId = uuidv4();
       this.activeSpans.set(spanId, { name });
       return spanId;
@@ -282,11 +283,11 @@ export class TraceManager {
     try {
       const span = this.activeSpans.get(spanId);
       if (!span) {
-        console.warn(`Attempted to end unknown span: ${spanId}`);
+        logger.warn(`Attempted to end unknown span: ${spanId}`);
         return false;
       }
 
-      console.log(`[Telemetry] Ending span: ${spanId}`);
+      logger.debug(`Ending span: ${spanId}`);
 
       if (typeof span.update === 'function') {
         // Update existing span using the client's update method
@@ -312,7 +313,7 @@ export class TraceManager {
       activeSpans.delete(spanId);
       return true;
     } catch (error) {
-      console.error(`Failed to end span ${spanId}:`, error);
+      logger.error(`Failed to end span ${spanId}:`, { error });
       this.activeSpans.delete(spanId);
       activeSpans.delete(spanId);
       return false;
@@ -343,7 +344,7 @@ export class TraceManager {
     try {
       const genId = uuidv4();
 
-      console.log(`[Telemetry] Creating generation: ${genId}, name: ${name}, parentSpan: ${spanId}`);
+      logger.debug(`Creating generation: ${genId}, name: ${name}, parentSpan: ${spanId}`);
 
       const generation = telemetry.langfuse.generation({
         id: genId,
@@ -363,7 +364,7 @@ export class TraceManager {
       this.activeGenerations.set(genId, generation);
       return genId;
     } catch (error) {
-      console.error(`Failed to start generation "${name}":`, error);
+      logger.error(`Failed to start generation "${name}":`, { error });
       return uuidv4();
     }
   }
@@ -388,7 +389,7 @@ export class TraceManager {
     }
 
     try {
-      console.log(`[Telemetry] Ending generation: ${generationId}`);
+      logger.debug(`Ending generation: ${generationId}`);
 
       const generation = this.activeGenerations.get(generationId);
 
@@ -423,7 +424,7 @@ export class TraceManager {
       activeGenerations.delete(generationId);
       return true;
     } catch (error) {
-      console.error(`Failed to end generation ${generationId}:`, error);
+      logger.error(`Failed to end generation ${generationId}:`, { error });
       this.activeGenerations.delete(generationId);
       activeGenerations.delete(generationId);
       return false;
@@ -464,7 +465,7 @@ export class TraceManager {
         }
       });
     } catch (error) {
-      console.error(`Failed to update trace token usage: ${error}`);
+      logger.error(`Failed to update trace token usage:`, { error });
     }
   }
 
@@ -490,7 +491,7 @@ export class TraceManager {
 
       return true;
     } catch (error) {
-      console.error(`Failed to update trace metadata: ${error}`);
+      logger.error(`Failed to update trace metadata:`, { error });
       return false;
     }
   }
@@ -515,7 +516,7 @@ export class TraceManager {
       try {
         this.endGeneration(genId, { earlyTermination: true }, { promptTokens: 0, completionTokens: 0, totalTokens: 0 });
       } catch (error) {
-        console.error(`Failed to end generation ${genId} during trace finish:`, error);
+        logger.error(`Failed to end generation ${genId} during trace finish:`, { error });
       }
     }
 
@@ -524,7 +525,7 @@ export class TraceManager {
     }
 
     try {
-      console.log(`[Telemetry] Finishing trace: ${this.traceId}, status: ${status}`);
+      logger.debug(`Finishing trace: ${this.traceId}, status: ${status}`);
 
       // Update the trace client directly
       this.traceClient.update({
@@ -538,7 +539,7 @@ export class TraceManager {
       await telemetry.langfuse.flushAsync();
       activeTraces.delete(this.traceId);
     } catch (error) {
-      console.error(`Failed to finish trace: ${error}`);
+      logger.error(`Failed to finish trace:`, { error });
       activeTraces.delete(this.traceId);
     }
   }
@@ -622,11 +623,11 @@ export const createGeneration = (
 
   try {
     const genId = uuidv4();
-    console.log(`[Telemetry] Creating generation: ${genId}, model: ${model}, parentSpan: ${parentObservationId}`);
+    logger.debug(`Creating generation: ${genId}, model: ${model}, parentSpan: ${parentObservationId}`);
 
     // Prevent duplicate generation creation
     if (activeGenerations.has(genId)) {
-      console.warn(`[Telemetry] Generation with ID ${genId} already exists, skipping creation`);
+      logger.warn(`Generation with ID ${genId} already exists, skipping creation`);
       return null;
     }
 
@@ -647,7 +648,7 @@ export const createGeneration = (
     activeGenerations.set(genId, generation);
     return generation;
   } catch (error) {
-    console.error('Failed to create generation:', error);
+    logger.error('Failed to create generation:', { error });
     return null;
   }
 };
@@ -665,7 +666,7 @@ export const completeGeneration = (
   }
 
   try {
-    console.log(`[Telemetry] Completing generation: ${generation.id}`);
+    logger.debug(`Completing generation: ${generation.id}`);
 
     // Determine if generation is a client object or just has an ID
     if (typeof generation.update === 'function') {
@@ -707,7 +708,7 @@ export const completeGeneration = (
     }
     return generation;
   } catch (error) {
-    console.error('Failed to complete generation:', error);
+    logger.error('Failed to complete generation:', { error });
     if (generation && generation.id) {
       activeGenerations.delete(generation.id);
     }
@@ -756,7 +757,7 @@ export async function updateTraceWithTokenUsage(
       });
     }
   } catch (error) {
-    console.error(`Error updating trace with token usage: ${error}`);
+    logger.error(`Error updating trace with token usage:`, { error });
   }
 }
 
@@ -782,7 +783,7 @@ export function createStreamingSpan(
   try {
     const spanId = uuidv4();
 
-    console.log(`[Telemetry] Creating streaming span: ${spanId}, name: ${name}, traceId: ${traceId}`);
+    logger.debug(`Creating streaming span: ${spanId}, name: ${name}, traceId: ${traceId}`);
 
     const span = telemetry.langfuse.span({
       id: spanId,
@@ -799,7 +800,7 @@ export function createStreamingSpan(
     activeSpans.set(spanId, span);
     return spanId;
   } catch (error) {
-    console.error(`Failed to create streaming span "${name}":`, error);
+    logger.error(`Failed to create streaming span "${name}":`, { error });
     return null;
   }
 }
@@ -848,7 +849,7 @@ export function updateStreamingTelemetry(
 
     return true;
   } catch (error) {
-    console.error(`Failed to update streaming span ${spanId}:`, error);
+    logger.error(`Failed to update streaming span ${spanId}:`, { error });
     return false;
   }
 }
@@ -871,7 +872,7 @@ export function completeStreamingSpan(
   }
 
   try {
-    console.log(`[Telemetry] Completing streaming span: ${spanId}`);
+    logger.debug(`Completing streaming span: ${spanId}`);
 
     // Check if we have the span cached
     const existingSpan = activeSpans.get(spanId);
@@ -906,7 +907,7 @@ export function completeStreamingSpan(
     activeSpans.delete(spanId);
     return true;
   } catch (error) {
-    console.error(`Failed to complete streaming span ${spanId}:`, error);
+    logger.error(`Failed to complete streaming span ${spanId}:`, { error });
     activeSpans.delete(spanId);
     return false;
   }
@@ -970,7 +971,7 @@ export function recordStreamingProgress(
     lastUpdate.timestamp = now;
     return true;
   } catch (error) {
-    console.error('Error recording streaming progress:', error);
+    logger.error('Error recording streaming progress:', { error });
     return false;
   }
 }
@@ -984,9 +985,9 @@ export const shutdownTelemetry = async () => {
     if (telemetry.langfuse) {
       try {
         await telemetry.langfuse.flushAsync();
-        console.log('Langfuse data flushed successfully');
+        logger.info('Langfuse data flushed successfully');
       } catch (error) {
-        console.error('Error flushing Langfuse data:', error);
+        logger.error('Error flushing Langfuse data:', { error });
       }
     }
   }

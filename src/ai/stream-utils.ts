@@ -8,6 +8,7 @@
 
 import { countTokensForModel } from './tokenizer';
 import { config } from '../config';
+import { logger } from '../utils/logger';
 
 /**
  * Creates a TransformStream that accumulates streamed chunks
