@@ -4,11 +4,12 @@
  * Demonstrates the use of the telemetry wrapper functions for AI SDK.
  */
 
-import { model, shutdownTelemetry, createTraceManager } from '../ai';
+import { shutdownTelemetry, createTraceManager } from '../ai';
 import { generateTextWithTelemetry, generateObjectWithTelemetry } from '../ai/telemetry-wrappers';
 import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../utils/logger';
+import {anthropic} from "@ai-sdk/anthropic";
 
 async function runImprovedTelemetryDemo() {
   logger.info('Starting Improved AI Telemetry Demo...');
@@ -33,7 +34,7 @@ async function runImprovedTelemetryDemo() {
 
     // Use the wrapper function with traceManager
     const textResult = await generateTextWithTelemetry({
-      model: model,
+      model: anthropic("claude-3-5-haiku-latest"),
       prompt: textPrompt,
       // Telemetry options
       traceManager: traceManager,  // Pass the traceManager directly
@@ -76,7 +77,7 @@ async function runImprovedTelemetryDemo() {
 
     // Use the wrapper function with traceManager
     const objectResult = await generateObjectWithTelemetry({
-      model: model,
+      model: anthropic("claude-3-5-haiku-latest"),
       schema: recipeSchema,
       prompt: "Generate a simple pasta recipe with garlic and tomatoes.",
       // Telemetry options
