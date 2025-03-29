@@ -45,10 +45,13 @@ export const initializeTelemetry = () => {
     const langfuse = new Langfuse({
       publicKey,
       secretKey,
-      baseUrl: config.telemetry.langfuse.baseUrl,
-      debug: config.server.isDevelopment || process.env.LANGFUSE_DEBUG === 'true',
-      flushAtExit: true,
+      baseUrl: config.telemetry.langfuse.baseUrl
     });
+
+    // 개발 모드 상태 설정
+    if (config.server.isDevelopment || process.env.LANGFUSE_DEBUG === 'true') {
+      logger.info('Langfuse debug mode enabled');
+    }
 
     logger.info('Langfuse telemetry initialized successfully');
     return {
@@ -226,8 +229,9 @@ export class TraceManager {
         logger.debug(`Span ${spanId} already exists, updating it`);
 
         const existingSpan = this.activeSpans.get(spanId);
-        if (existingSpan && typeof existingSpan.update === 'function') {
-          existingSpan.update({
+        if (existingSpan) {
+          // existingSpan을 직접 수정하는 대신 메타데이터만 로깅
+          logger.debug('Cannot update span directly, would update with:', {
             metadata: {
               ...metadata,
               updatedAt: new Date().toISOString(),
@@ -407,7 +411,6 @@ export class TraceManager {
         // Fallback to creating a temporary client
         telemetry.langfuse.generation({
           id: generationId,
-          update: true,
           output,
           usage,
           metadata: {

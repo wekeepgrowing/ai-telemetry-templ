@@ -6,18 +6,24 @@
  * while adding comprehensive telemetry.
  */
 
-import {generateText, generateObject, streamText, streamObject, GenerateObjectResult} from 'ai';
-import { config } from '../config';
-import {
-  telemetry,
-  getAITelemetryOptions,
-  TraceManager
-} from './telemetry';
-import { countTokens, countTokensForModel } from './tokenizer';
-import { createAccumulatingTransform, createTokenCountingTransform } from './stream-utils';
-import { v4 as uuidv4 } from 'uuid';
-import { Schema, z } from "zod";
+import { TraceManager } from './telemetry';
 import { logger } from '../utils/logger';
+import { v4 as uuidv4 } from 'uuid';
+import { telemetry } from './telemetry';
+import * as z from 'zod';
+import {
+  generateText,
+  generateObject,
+  streamText,
+  streamObject,
+  type Schema,
+  type GenerateObjectResult,
+  type JSONValue,
+  type CoreMessage
+} from 'ai';
+import { config } from '../config';
+import { getAITelemetryOptions } from './telemetry';
+import { countTokensForModel } from './tokenizer';
 
 // Telemetry-specific parameters that can be added to AI SDK function calls
 export interface TelemetryParams {
@@ -417,14 +423,7 @@ export async function streamTextWithTelemetry(
     // Call the original AI SDK streamText function
     const result = await streamText(aiSdkParams);
 
-    // Set up token counting and accumulation
-    const tokenCounter = createTokenCountingTransform(modelName);
-
-    // Create a new textStream with token counting
-    const monitoredTextStream = result.textStream
-      .pipeThrough(tokenCounter.transform);
-
-    // Handle final token counting and telemetry completion
+    // Handle final token counting and telemetry completion on text promise resolution
     result.text.then(async (fullText) => {
       // Get final completion token count
       const finalCompletionTokenCount = countTokensForModel(fullText, modelName);
@@ -445,25 +444,11 @@ export async function streamTextWithTelemetry(
       logger.error('Error processing final text stream result:', { error });
     });
 
-    // Set up progress monitoring
-    const monitoringInterval = setupStreamMonitoring(
-      traceManager,
-      tokenCounter,
-      promptTokenCount,
-      parentSpanId
-    );
+    // Set up metadata updating for progress in the background
+    setupBackgroundTelemetryUpdates(traceManager, result.textStream, modelName, promptTokenCount, parentSpanId);
 
-    // Create a wrapper for the textStream that cleans up monitoring
-    const enhancedTextStream = createEnhancedReadableStream(
-      monitoredTextStream,
-      monitoringInterval
-    );
-
-    // Return the modified result with monitored streams
-    return {
-      ...result,
-      textStream: enhancedTextStream
-    };
+    // Return the original streaming result directly without wrapping
+    return result;
   } catch (error) {
     // Record error in telemetry if possible
     endTelemetryGeneration(
@@ -543,13 +528,6 @@ export async function streamObjectWithTelemetry<T>(
     // Call the original AI SDK streamObject function
     const result = await streamObject<T>(aiSdkParams);
 
-    // Initialize accumulator for object accumulation
-    const accumulator = createAccumulatingTransform<T>();
-
-    // Create a monitored partialObjectStream
-    const monitoredPartialObjectStream = result.partialObjectStream
-      .pipeThrough(accumulator.transform);
-
     // Handle final token counting and telemetry completion
     result.object.then(async (finalObject) => {
       const finalJson = JSON.stringify(finalObject);
@@ -571,26 +549,11 @@ export async function streamObjectWithTelemetry<T>(
       logger.error('Error processing final object stream result:', { error });
     });
 
-    // Set up progress monitoring for objects
-    const monitoringInterval = setupObjectStreamMonitoring(
-      traceManager,
-      accumulator,
-      modelName,
-      promptTokenCount,
-      parentSpanId
-    );
+    // Set up object metadata updates in the background
+    setupBackgroundObjectTelemetryUpdates(traceManager, result as any, modelName, promptTokenCount, parentSpanId);
 
-    // Create a wrapper for the partialObjectStream that cleans up monitoring
-    const enhancedPartialObjectStream = createEnhancedReadableStream<T>(
-      monitoredPartialObjectStream,
-      monitoringInterval
-    );
-
-    // Return the modified result with monitored streams
-    return {
-      ...result,
-      partialObjectStream: enhancedPartialObjectStream
-    };
+    // Return the original result directly without wrapping
+    return result as any;
   } catch (error) {
     // Record error in telemetry if possible
     endTelemetryGeneration(
@@ -608,107 +571,152 @@ export async function streamObjectWithTelemetry<T>(
 }
 
 /**
- * Helper function to set up monitoring for text streams
+ * Sets up background telemetry updates for text streams without wrapping the stream
+ * Uses a tee to monitor the stream without modifying it
  */
-function setupStreamMonitoring(
+function setupBackgroundTelemetryUpdates(
   traceManager: TraceManager,
-  tokenCounter: ReturnType<typeof createTokenCountingTransform>,
-  promptTokenCount: number,
-  parentSpanId?: string
-) {
-  return setInterval(() => {
-    if (telemetry.isEnabled && parentSpanId) {
-      const currentTokenCount = tokenCounter.getTokenCount();
-
-      const progressData = {
-        completionTokensSoFar: currentTokenCount,
-        promptTokens: promptTokenCount,
-        totalTokensSoFar: promptTokenCount + currentTokenCount,
-        textLength: tokenCounter.getAccumulatedText().length
-      };
-
-      // Use TraceManager to update metadata
-      traceManager.updateTraceMetadata({
-        streamingProgress: {
-          ...progressData,
-          timestamp: new Date().toISOString()
-        }
-      });
-    }
-  }, 100);
-}
-
-/**
- * Helper function to set up monitoring for object streams
- */
-function setupObjectStreamMonitoring<T>(
-  traceManager: TraceManager,
-  accumulator: ReturnType<typeof createAccumulatingTransform<T>>,
+  textStream: ReadableStream<string>,
   modelName: string,
   promptTokenCount: number,
   parentSpanId?: string
 ) {
-  return setInterval(() => {
-    if (telemetry.isEnabled && parentSpanId) {
-      const currentObject = accumulator.getAccumulated();
+  if (!telemetry.isEnabled || !parentSpanId) return;
 
-      // Skip if no accumulated object yet
-      if (!currentObject) return;
+  try {
+    // Clone the stream to observe it without consuming it
+    const [originalStream, monitorStream] = textStream.tee();
 
-      // Estimate token usage based on the JSON size of the partial object
-      const partialJson = JSON.stringify(currentObject);
-      const partialTokens = countTokensForModel(partialJson, modelName);
+    // Replace the original stream with our cloned one
+    Object.defineProperty(textStream, 'getReader', {
+      value: () => originalStream.getReader(),
+      configurable: true
+    });
 
-      const progressData = {
-        completionTokensSoFar: partialTokens,
-        promptTokens: promptTokenCount,
-        totalTokensSoFar: promptTokenCount + partialTokens,
-        partialObjectSize: partialJson.length
-      };
+    // Create a background update process
+    let accumulatedText = '';
+    const reader = monitorStream.getReader();
 
-      // Use TraceManager to update metadata
-      traceManager.updateTraceMetadata({
-        streamingProgress: {
-          ...progressData,
-          timestamp: new Date().toISOString()
+    const updateInterval = setInterval(() => {
+      // This interval function will periodically update metadata
+      if (accumulatedText) {
+        const currentTokenCount = countTokensForModel(accumulatedText, modelName);
+
+        const progressData = {
+          completionTokensSoFar: currentTokenCount,
+          promptTokens: promptTokenCount,
+          totalTokensSoFar: promptTokenCount + currentTokenCount,
+          textLength: accumulatedText.length
+        };
+
+        // Update trace metadata
+        traceManager.updateTraceMetadata({
+          streamingProgress: {
+            ...progressData,
+            timestamp: new Date().toISOString()
+          }
+        });
+      }
+    }, 100);
+
+    // Read from the monitor stream to observe data without affecting the original
+    function readChunks() {
+      reader.read().then((result: ReadableStreamReadResult<any>) => {
+        const { done, value } = result;
+        if (done) {
+          clearInterval(updateInterval);
+          return;
         }
+        
+        // Accumulate text for token counting
+        accumulatedText += value;
+        readChunks();
+      }).catch((err: Error) => {
+        clearInterval(updateInterval);
+        logger.error('Error reading from monitor stream:', { error: err });
       });
     }
-  }, 100);
+
+    // Start reading
+    readChunks();
+  } catch (error) {
+    logger.error('Error setting up stream monitoring:', { error });
+  }
 }
 
 /**
- * Helper function to create an enhanced readable stream with monitoring cleanup
+ * Sets up background telemetry updates for object streams
  */
-function createEnhancedReadableStream<T>(
-  inputStream: ReadableStream<T>,
-  monitoringInterval: NodeJS.Timeout
-): ReadableStream<T> {
-  return new ReadableStream<T>({
-    start(controller) {
-      const reader = inputStream.getReader();
+function setupBackgroundObjectTelemetryUpdates<T>(
+  traceManager: TraceManager,
+  result: ReturnType<typeof streamObject<T>>,
+  modelName: string,
+  promptTokenCount: number,
+  parentSpanId?: string
+) {
+  if (!telemetry.isEnabled || !parentSpanId) return;
 
-      function pump(): unknown {
-        return reader.read().then(({ done, value }) => {
-          if (done) {
-            clearInterval(monitoringInterval);
-            controller.close();
-            return;
+  try {
+    // Clone the stream to observe it without consuming it
+    const [originalStream, monitorStream] = result.partialObjectStream.tee();
+
+    // Replace the original stream with our cloned one
+    Object.defineProperty(result.partialObjectStream, 'getReader', {
+      value: () => originalStream.getReader(),
+      configurable: true
+    });
+
+    // Create a background update process
+    let latestObject: any = null;
+    const reader = monitorStream.getReader();
+
+    const updateInterval = setInterval(() => {
+      // This interval function will periodically update metadata
+      if (latestObject) {
+        const partialJson = JSON.stringify(latestObject);
+        const partialTokens = countTokensForModel(partialJson, modelName);
+
+        const progressData = {
+          completionTokensSoFar: partialTokens,
+          promptTokens: promptTokenCount,
+          totalTokensSoFar: promptTokenCount + partialTokens,
+          partialObjectSize: partialJson.length
+        };
+
+        // Update trace metadata
+        traceManager.updateTraceMetadata({
+          streamingProgress: {
+            ...progressData,
+            timestamp: new Date().toISOString()
           }
-
-          controller.enqueue(value);
-          return pump();
-        }).catch(error => {
-          clearInterval(monitoringInterval);
-          controller.error(error);
         });
       }
+    }, 100);
 
-      return pump();
-    },
-    cancel() {
-      clearInterval(monitoringInterval);
+    // Read from the monitor stream to observe data without affecting the original
+    function readChunks() {
+      reader.read().then((result: ReadableStreamReadResult<any>) => {
+        const { done, value } = result;
+        if (done) {
+          clearInterval(updateInterval);
+          return;
+        }
+        
+        // Update latest object state
+        if (typeof value === 'object' && value !== null) {
+          latestObject = value;
+        }
+
+        readChunks();
+      }).catch((err: Error) => {
+        clearInterval(updateInterval);
+        logger.error('Error reading from monitor stream:', { error: err });
+      });
     }
-  });
-}
 
+    // Start reading
+    readChunks();
+  } catch (error) {
+    logger.error('Error setting up object stream monitoring:', { error });
+  }
+}

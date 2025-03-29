@@ -1,6 +1,6 @@
 /**
  * Dynamic Prompt Runner
- * 
+ *
  * Receives JSON input via stdin with prompt name and variables,
  * executes the prompt using Langfuse, and streams the response to stdout.
  * All logs are directed to stderr.
@@ -11,28 +11,28 @@ import { Readable } from 'stream';
 import { z } from 'zod';
 import { createTraceManager } from './ai/telemetry';
 import { logger } from './utils/logger';
-import { executePrompt, streamGeneratedText } from './prompts/prompt-handlers';
+import { executePrompt, streamGeneratedText } from './prompts';
 
 // Schema for the input JSON
 const PromptRequestSchema = z.object({
   // Name of the prompt in Langfuse
   promptName: z.string(),
-  
+
   // Variables to pass to the prompt
   variables: z.record(z.any()),
-  
+
   // Optional temperature for generation
   temperature: z.number().optional().default(0.7),
-  
+
   // Optional trace ID for telemetry
   traceId: z.string().optional(),
-  
+
   // Optional operation name for telemetry
   operationName: z.string().optional(),
-  
+
   // Optional system prompt for direct streaming (backwards compatibility)
   systemPrompt: z.string().optional(),
-  
+
   // Optional model provider and name (e.g. "openai:gpt-4o", "google:gemini-1.5-pro", "grok:grok-1")
   model: z.string().optional()
 });
@@ -40,33 +40,24 @@ const PromptRequestSchema = z.object({
 type PromptRequest = z.infer<typeof PromptRequestSchema>;
 
 /**
- * Convert a ReadableStream to a Node.js readable stream
+ * Stream data directly from a ReadableStream to stdout
+ * @param stream The ReadableStream to pipe to stdout
+ * @returns Promise that resolves when streaming is complete
  */
-function convertReadableStreamToNodeStream(readableStream: ReadableStream): Readable {
-  const nodeStream = new Readable({
-    read() {} // No-op implementation required
-  });
+async function streamToStdout(stream: ReadableStream<any>): Promise<void> {
+  const reader = stream.getReader();
 
-  const reader = readableStream.getReader();
-  
-  // Pump the ReadableStream into the Node.js Readable
-  function pump() {
-    reader.read().then(({ done, value }) => {
-      if (done) {
-        nodeStream.push(null); // Signal end of stream
-        return;
-      }
-      
-      nodeStream.push(value);
-      pump();
-    }).catch(err => {
-      logger.error('Error reading from stream:', { error: err });
-      nodeStream.emit('error', err);
-    });
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      // Write the chunk directly to stdout
+      process.stdout.write(value);
+    }
+  } finally {
+    reader.releaseLock();
   }
-  
-  pump();
-  return nodeStream;
 }
 
 /**
@@ -82,20 +73,22 @@ async function executePromptHandler(request: PromptRequest): Promise<void> {
       undefined,
       request.traceId
     );
-    
+
     logger.debug(`Starting prompt handler: ${request.promptName}`, {
       traceId,
       variables: JSON.stringify(request.variables),
       model: request.model
     });
-    
+
+    let stream: ReadableStream<string>;
+
     // Handle direct streaming with system prompt (backwards compatibility)
     if (request.systemPrompt) {
-      const userPrompt = typeof request.variables.userPrompt === 'string' 
-        ? request.variables.userPrompt 
+      const userPrompt = typeof request.variables.userPrompt === 'string'
+        ? request.variables.userPrompt
         : JSON.stringify(request.variables);
-      
-      const stream = await streamGeneratedText(
+
+      stream = await streamGeneratedText(
         traceManager,
         request.systemPrompt,
         userPrompt,
@@ -103,48 +96,24 @@ async function executePromptHandler(request: PromptRequest): Promise<void> {
         request.model,
         request.variables
       );
-      
-      // Convert ReadableStream to Node.js Readable and pipe to stdout
-      const nodeStream = convertReadableStreamToNodeStream(stream);
-      nodeStream.pipe(process.stdout);
-      
-      // Wait for stream to end before finishing the trace
-      nodeStream.on('end', async () => {
-        await traceManager.finishTrace('success');
-      });
-      
-      nodeStream.on('error', async (err) => {
-        logger.error('Stream error:', { error: err });
-        await traceManager.finishTrace('error', { error: String(err) });
-      });
-      
-      return;
+    } else {
+      // Execute the Langfuse prompt
+      stream = await executePrompt(
+        traceManager,
+        request.promptName,
+        request.variables,
+        request.operationName || `execute-${request.promptName}`,
+        request.temperature,
+        request.model,
+        { model: request.model, ...request.variables }
+      );
     }
-    
-    // Execute the Langfuse prompt
-    const stream = await executePrompt(
-      traceManager,
-      request.promptName,
-      request.variables,
-      request.operationName || `execute-${request.promptName}`,
-      request.temperature,
-      request.model,
-      { model: request.model, ...request.variables }
-    );
-    
-    // Convert ReadableStream to Node.js Readable and pipe to stdout
-    const nodeStream = convertReadableStreamToNodeStream(stream);
-    nodeStream.pipe(process.stdout);
-    
-    // Wait for stream to end before finishing the trace
-    nodeStream.on('end', async () => {
-      await traceManager.finishTrace('success');
-    });
-    
-    nodeStream.on('error', async (err) => {
-      logger.error('Stream error:', { error: err });
-      await traceManager.finishTrace('error', { error: String(err) });
-    });
+
+    // Stream directly to stdout without converting to Node.js stream
+    await streamToStdout(stream);
+
+    // Finish the trace after streaming completes
+    await traceManager.finishTrace('success');
   } catch (error) {
     logger.error('Error executing prompt handler:', { error });
     process.stderr.write(JSON.stringify({ error: String(error) }));
@@ -160,29 +129,29 @@ function processStdin(): void {
     output: process.stderr, // Use stderr for readline output
     terminal: false
   });
-  
+
   // Set encoding to UTF-8
   process.stdin.setEncoding('utf8');
-  
+
   logger.info('Waiting for JSON input on stdin...');
-  
+
   let inputData = '';
-  
+
   // Handle input data
   rl.on('line', (line) => {
     inputData += line;
-    
+
     try {
       // Try to parse the JSON (this will throw if incomplete)
       const data = JSON.parse(inputData);
-      
+
       // Validate the input against our schema
       const parseResult = PromptRequestSchema.safeParse(data);
-      
+
       if (parseResult.success) {
         // Close the readline interface as we have valid input
         rl.close();
-        
+
         // Execute the prompt handler
         executePromptHandler(parseResult.data).catch(error => {
           logger.error('Error in prompt execution:', { error });
@@ -205,7 +174,7 @@ function processStdin(): void {
       }
     }
   });
-  
+
   // Handle end of input
   rl.on('close', () => {
     if (!inputData.trim()) {

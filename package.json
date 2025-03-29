@@ -5,9 +5,23 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "build:executor": "tsc && chmod +x dist/json-executor.js",
+    "build:sea": "node scripts/build-sea.js",
+    "build:sea:sudo": "./scripts/run-sea-build.sh",
     "demo": "tsx --env-file=.env src/ai/examples.ts",
     "dev": "tsx watch --env-file=.env src/examples/ai-telemetry-demo.ts",
     "test": "node --test src/**/*.test.ts"
+  },
+  "bin": {
+    "ai-executor": "dist/json-executor.js"
+  },
+  "pkg": {
+    "targets": [
+      "node23-linux-x64",
+      "node23-macos-x64",
+      "node23-win-x64"
+    ],
+    "outputPath": "bin"
   },
   "keywords": [
     "ai",

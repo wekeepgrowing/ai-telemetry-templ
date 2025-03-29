@@ -1,6 +1,6 @@
 /**
  * AI 프롬프트 핸들러
- * 
+ *
  * Langfuse의 getPrompt 함수를 사용하여 각 기능에 맞는 AI 호출 함수를 구현합니다.
  */
 
@@ -35,13 +35,16 @@ function createModelObject(modelString?: string): LanguageModelV1 {
   if (!modelString) {
     return openai(config.openai.model);
   }
-  
+
   // Parse the model string to get provider and model name
   const [provider, modelName] = modelString.includes(':')
     ? modelString.split(':', 2)
     : ['openai', modelString];
-  
-  switch (provider.toLowerCase()) {
+
+  // provider가 반드시 존재하도록 처리
+  const providerName = provider || 'openai';
+
+  switch (providerName.toLowerCase()) {
     case 'openai':
       return openai(modelName || config.openai.model);
     case 'google':
@@ -94,10 +97,10 @@ export async function executePrompt(
     const promptClient = await langfuse.getPrompt(promptName, undefined, {
       type: "chat"
     });
-    
+
     // 채팅 메시지 배열로 컴파일
     const compiledMessages = promptClient.compile(variables) as CoreMessage[];
-    
+
     const result = await streamTextWithTelemetry({
       model: createModelObject(model),
       messages: compiledMessages,
@@ -109,7 +112,7 @@ export async function executePrompt(
         modelString: model
       }
     });
-    
+
     return result.textStream;
   } catch (error) {
     logger.error('프롬프트 가져오기 오류:', { error });
@@ -137,20 +140,20 @@ export async function streamGeneratedText(
   metadata: Record<string, any> = {}
 ): Promise<ReadableStream<string>> {
   try {
-    const messages = [];
-    
+    const messages: CoreMessage[] = [];
+
     if (systemPrompt) {
       messages.push({
         role: 'system',
         content: systemPrompt
-      });
+      } as CoreMessage);
     }
-    
+
     messages.push({
       role: 'user',
       content: userPrompt
-    });
-    
+    } as CoreMessage);
+
     const result = await streamTextWithTelemetry({
       model: createModelObject(model),
       messages,
@@ -161,7 +164,7 @@ export async function streamGeneratedText(
         modelString: model
       }
     });
-    
+
     return result.textStream;
   } catch (error) {
     logger.error('텍스트 생성 오류:', { error });

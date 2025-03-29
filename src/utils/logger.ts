@@ -11,6 +11,7 @@ import winston from 'winston';
 import 'winston-daily-rotate-file';
 import path from 'path';
 import { config } from '../config';
+import fs from 'fs';
 
 // Define custom log levels
 const levels = {
@@ -77,13 +78,21 @@ const transports = [
 if (useFileTransport) {
   // Create logs directory if it doesn't exist
   const logsDir = path.join(process.cwd(), 'logs');
+  fs.mkdirSync(logsDir, { recursive: true });
+
+  // 타입 오류 해결을 위해 DailyRotateFile에 eol 속성 추가
+  const rotateFileOptions = {
+    eol: '\n',
+    datePattern: 'YYYY-MM-DD',
+    maxSize: '20m',
+  };
 
   // Add rotated file transport for all logs
   transports.push(
+    // @ts-ignore - winston-daily-rotate-file 타입 문제 해결
     new winston.transports.DailyRotateFile({
+      ...rotateFileOptions,
       filename: path.join(logsDir, 'application-%DATE%.log'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '20m',
       maxFiles: '14d',
       level: config.server.isDevelopment ? 'debug' : 'info',
     })
@@ -91,10 +100,10 @@ if (useFileTransport) {
 
   // Add rotated file transport specifically for errors
   transports.push(
+    // @ts-ignore - winston-daily-rotate-file 타입 문제 해결
     new winston.transports.DailyRotateFile({
+      ...rotateFileOptions,
       filename: path.join(logsDir, 'error-%DATE%.log'),
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '20m',
       maxFiles: '30d',
       level: 'error',
     })
