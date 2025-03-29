@@ -42,7 +42,7 @@ function loadEnv() {
   } catch (error) {
     if (error instanceof z.ZodError) {
       const formattedErrors = error.format();
-      console.error('Environment validation failed:', JSON.stringify(formattedErrors, null, 2));
+      process.stderr.write(`[ERROR] Environment validation failed: ${JSON.stringify(formattedErrors, null, 2)}\n`);
       process.exit(1);
     }
     throw error;

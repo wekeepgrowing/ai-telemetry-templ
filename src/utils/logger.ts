@@ -67,6 +67,7 @@ const transports = [
           winston.format.colorize({ all: true }),
           winston.format.simple()
         ),
+    stderrLevels: Object.keys(levels) as any,
   })
 ];
 

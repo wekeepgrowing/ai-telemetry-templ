@@ -1,0 +1,7 @@
+<to-do_list>
+{{.ToDoList}}
+</to-do_list>
+
+<user_prompt>
+Please generate assessment about "{{.TargetTask}}"
+</user_prompt>

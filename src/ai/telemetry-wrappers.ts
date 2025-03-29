@@ -17,6 +17,7 @@ import { countTokens, countTokensForModel } from './tokenizer';
 import { createAccumulatingTransform, createTokenCountingTransform } from './stream-utils';
 import { v4 as uuidv4 } from 'uuid';
 import { Schema, z } from "zod";
+import { logger } from '../utils/logger';
 
 // Telemetry-specific parameters that can be added to AI SDK function calls
 export interface TelemetryParams {
@@ -88,7 +89,7 @@ function startTelemetryGeneration(params: TelemetryOperation) {
       }
     );
   } catch (error) {
-    console.error(`Error creating telemetry for ${operationName}:`, error);
+    logger.error(`Error creating telemetry for ${operationName}:`, { error });
     return null;
   }
 }
@@ -120,10 +121,10 @@ function endTelemetryGeneration(
 
     // Log token usage for debugging
     if (success && config.server.isDevelopment) {
-      console.log(`[Telemetry] Token usage:`, tokenUsage);
+      logger.info(`[Telemetry] Token usage:`, tokenUsage);
     }
   } catch (telemetryError) {
-    console.error('Error in telemetry processing:', telemetryError);
+    logger.error('Error in telemetry processing:', { error: telemetryError });
   }
 }
 
@@ -441,7 +442,7 @@ export async function streamTextWithTelemetry(
         }
       );
     }).catch(error => {
-      console.error('Error processing final text stream result:', error);
+      logger.error('Error processing final text stream result:', { error });
     });
 
     // Set up progress monitoring
@@ -567,7 +568,7 @@ export async function streamObjectWithTelemetry<T>(
         }
       );
     }).catch(error => {
-      console.error('Error processing final object stream result:', error);
+      logger.error('Error processing final object stream result:', { error });
     });
 
     // Set up progress monitoring for objects
@@ -710,3 +711,4 @@ function createEnhancedReadableStream<T>(
     }
   });
 }
+

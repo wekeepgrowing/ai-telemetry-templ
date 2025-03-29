@@ -5,8 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "demo:ai": "tsx --env-file=.env src/examples/ai-telemetry-demo.ts",
-    "demo:stream": "tsx --env-file=.env src/examples/ai-stream-telemetry-demo.ts console",
+    "demo": "tsx --env-file=.env src/ai/examples.ts",
     "dev": "tsx watch --env-file=.env src/examples/ai-telemetry-demo.ts",
     "test": "node --test src/**/*.test.ts"
   },

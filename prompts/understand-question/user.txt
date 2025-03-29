@@ -1,0 +1,8 @@
+<qa_list>
+<question>
+{{.Question}}
+</question>
+<answer>
+{{.Answer}}
+</answer>
+</qa_list>

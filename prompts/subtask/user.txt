@@ -1,0 +1,13 @@
+Target Language: {{.Language}}
+
+<user_data>
+{{.UserData}}
+</user_data>
+
+<to-do_list>
+{{.ToDoList}}
+</to-do_list>
+
+<user_prompt>
+Please generate sub-task of "{{.TargetTask}}" and rename task.
+</user_prompt>
