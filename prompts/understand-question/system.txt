@@ -1,1 +1,0 @@
-Your role is to understand the <qa_list> and determine the user’s current situation. Once you have the <qa_list>, let me know the user’s status.

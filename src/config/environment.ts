@@ -18,6 +18,19 @@ const envSchema = z.object({
   OPENAI_MODEL: z.string().default('gpt-4o'),
   OPENAI_ENDPOINT: z.string().url().default('https://api.openai.com/v1'),
 
+  // Anthropic settings
+  ANTHROPIC_API_KEY: z.string().optional(),
+  ANTHROPIC_MODEL: z.string().default('claude-3-5-sonnet-20240620'),
+
+  // Google Gemini settings
+  GOOGLE_API_KEY: z.string().optional(),
+  GOOGLE_MODEL: z.string().default('gemini-1.5-pro'),
+  
+  // Grok settings
+  GROK_API_KEY: z.string().optional(),
+  GROK_MODEL: z.string().default('grok-1'),
+  GROK_ENDPOINT: z.string().url().optional(),
+
   // Other settings
   CONTEXT_SIZE: z.string().transform(val => parseInt(val, 10)).default('128000'),
 

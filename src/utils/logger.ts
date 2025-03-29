@@ -4,6 +4,7 @@
  * Provides structured logging with different transports and log levels
  * based on the environment. Supports console and file logging with
  * appropriate formatting for development and production.
+ * All console output goes to stderr to keep stdout clean for AI responses.
  */
 
 import winston from 'winston';
@@ -59,15 +60,16 @@ const useFileTransport = config.logging?.enableFileLogging || false;
 
 // Create transports array
 const transports = [
-  // Always log to console
-  new winston.transports.Console({
+  // Always log to stderr instead of console
+  new winston.transports.Stream({
+    stream: process.stderr,
     format: config.server.isDevelopment
       ? developmentFormat
       : winston.format.combine(
           winston.format.colorize({ all: true }),
           winston.format.simple()
         ),
-    stderrLevels: Object.keys(levels) as any,
+    level: 'trace', // Log everything to stderr
   })
 ];
 
