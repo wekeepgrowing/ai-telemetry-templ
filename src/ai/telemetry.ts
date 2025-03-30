@@ -330,7 +330,7 @@ export class TraceManager {
    * @param spanId Parent span ID
    * @param name Name of the generation
    * @param model Model being used (IMPORTANT: Always specify to avoid undefined model)
-   * @param prompt Input prompt text
+   * @param input Input prompt text
    * @param metadata Additional metadata
    * @returns Generation ID string
    */
@@ -338,7 +338,7 @@ export class TraceManager {
     spanId: string,
     name: string,
     model: string = this.defaultModel,
-    prompt: string,
+    input: string,
     metadata: Record<string, any> = {}
   ): string {
     if (!telemetry.isEnabled || !telemetry.langfuse) {
@@ -356,7 +356,7 @@ export class TraceManager {
         traceId: this.traceId,
         parentObservationId: spanId,
         model, // Explicitly set model
-        input: { prompt },
+        input: { prompt: input },
         metadata: {
           ...metadata,
           modelId: model, // Duplicate to ensure it's available in metadata

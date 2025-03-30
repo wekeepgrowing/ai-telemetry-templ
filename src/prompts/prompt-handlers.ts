@@ -109,7 +109,9 @@ export async function executePrompt(
       temperature,
       metadata: {
         ...metadata,
-        modelString: model
+        modelString: model,
+        userId: metadata.userId,
+        sessionId: metadata.sessionId
       }
     });
 
@@ -161,7 +163,9 @@ export async function streamGeneratedText(
       operationName,
       metadata: {
         ...metadata,
-        modelString: model
+        modelString: model,
+        userId: metadata.userId,
+        sessionId: metadata.sessionId
       }
     });
 

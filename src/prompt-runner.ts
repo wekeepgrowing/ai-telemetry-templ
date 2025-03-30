@@ -34,7 +34,13 @@ const PromptRequestSchema = z.object({
   systemPrompt: z.string().optional(),
 
   // Optional model provider and name (e.g. "openai:gpt-4o", "google:gemini-1.5-pro", "grok:grok-1")
-  model: z.string().optional()
+  model: z.string().optional(),
+
+  // Optional user ID for Langfuse telemetry
+  userId: z.string().optional(),
+
+  // Optional session ID for Langfuse telemetry
+  sessionId: z.string().optional()
 });
 
 type PromptRequest = z.infer<typeof PromptRequestSchema>;
@@ -69,15 +75,17 @@ async function executePromptHandler(request: PromptRequest): Promise<void> {
     const { traceManager, traceId } = createTraceManager(
       request.operationName || `prompt-${request.promptName}`,
       { promptName: request.promptName, ...request.variables },
-      undefined,
-      undefined,
+      request.sessionId,
+      request.userId,
       request.traceId
     );
 
     logger.debug(`Starting prompt handler: ${request.promptName}`, {
       traceId,
       variables: JSON.stringify(request.variables),
-      model: request.model
+      model: request.model,
+      userId: request.userId,
+      sessionId: request.sessionId
     });
 
     let stream: ReadableStream<string>;
@@ -105,7 +113,12 @@ async function executePromptHandler(request: PromptRequest): Promise<void> {
         request.operationName || `execute-${request.promptName}`,
         request.temperature,
         request.model,
-        { model: request.model, ...request.variables }
+        {
+          model: request.model,
+          ...request.variables,
+          userId: request.userId,
+          sessionId: request.sessionId
+        }
       );
     }
 
