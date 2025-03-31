@@ -35,7 +35,7 @@ export const config = {
 
   // Google Gemini configuration
   google: {
-    apiKey: env.GOOGLE_API_KEY,
+    apiKey: env.GOOGLE_GENERATIVE_AI_API_KEY,
     model: env.GOOGLE_MODEL,
   },
 

@@ -23,7 +23,7 @@ const envSchema = z.object({
   ANTHROPIC_MODEL: z.string().default('claude-3-5-haiku-latest'),
 
   // Google Gemini settings
-  GOOGLE_API_KEY: z.string().optional(),
+  GOOGLE_GENERATIVE_AI_API_KEY: z.string().optional(),
   GOOGLE_MODEL: z.string().default('gemini-2.0-flash-lite'),
 
   // Grok settings
