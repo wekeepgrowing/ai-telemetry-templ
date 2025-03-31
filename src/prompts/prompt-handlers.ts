@@ -54,11 +54,11 @@ function createModelObject(modelString?: string): LanguageModelV1 {
       }
       return google(modelName || config.google.model);
     case 'xai':
-      if (!config.grok.apiKey) {
-        logger.warn('Grok API key not configured, falling back to OpenAI');
+      if (!config.xai.apiKey) {
+        logger.warn('Xai API key not configured, falling back to OpenAI');
         return openai(config.openai.model);
       }
-      return xai(modelName || config.grok.model);
+      return xai(modelName || config.xai.model);
     case 'anthropic':
       if (!config.anthropic.apiKey) {
         logger.warn('Anthropic API key not configured, falling back to OpenAI');
@@ -111,7 +111,8 @@ export async function executePrompt(
         ...metadata,
         modelString: model,
         userId: metadata.userId,
-        sessionId: metadata.sessionId
+        sessionId: metadata.sessionId,
+        promptClient
       }
     });
 

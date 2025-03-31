@@ -357,6 +357,7 @@ export class TraceManager {
         parentObservationId: spanId,
         model, // Explicitly set model
         input: { prompt: input },
+        prompt: metadata.promptClient,
         metadata: {
           ...metadata,
           modelId: model, // Duplicate to ensure it's available in metadata

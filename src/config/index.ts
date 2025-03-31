@@ -38,12 +38,12 @@ export const config = {
     apiKey: env.GOOGLE_API_KEY,
     model: env.GOOGLE_MODEL,
   },
-  
-  // Grok configuration
-  grok: {
-    apiKey: env.GROK_API_KEY,
-    model: env.GROK_MODEL,
-    baseUrl: env.GROK_ENDPOINT,
+
+  // Xai configuration
+  xai: {
+    apiKey: env.XAI_API_KEY,
+    model: env.XAI_MODEL,
+    baseUrl: env.XAI_ENDPOINT,
   },
 
   // Telemetry configuration

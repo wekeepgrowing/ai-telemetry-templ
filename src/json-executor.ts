@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * JSON Prompt Executor
- * 
+ *
  * Main entry point for the Langfuse prompt execution system.
  * Reads JSON from stdin, executes the Langfuse prompt, and streams results to stdout.
  */
@@ -13,8 +13,8 @@ import { logger } from './utils/logger';
 logger.info('AI Prompt Executor Starting...');
 logger.info('Ready to accept JSON input from stdin');
 logger.info('Format: {"promptName": "langfusePromptName", "variables": {...}, "temperature": 0.7, "model": "provider:model"}');
-logger.info('Supported model providers: openai, google, grok');
-logger.info('Examples: "openai:gpt-4o", "google:gemini-1.5-pro", "grok:grok-1"');
+logger.info('Supported model providers: openai, google, xai');
+logger.info('Examples: "openai:gpt-4o", "google:gemini-1.5-pro", "xai:grok-1"');
 
 // Start processing stdin
 processStdin();
