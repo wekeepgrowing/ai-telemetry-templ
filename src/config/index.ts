@@ -27,6 +27,25 @@ export const config = {
     contextSize: env.CONTEXT_SIZE,
   },
 
+  // Anthropic configuration
+  anthropic: {
+    apiKey: env.ANTHROPIC_API_KEY,
+    model: env.ANTHROPIC_MODEL,
+  },
+
+  // Google Gemini configuration
+  google: {
+    apiKey: env.GOOGLE_GENERATIVE_AI_API_KEY,
+    model: env.GOOGLE_MODEL,
+  },
+
+  // Xai configuration
+  xai: {
+    apiKey: env.XAI_API_KEY,
+    model: env.XAI_MODEL,
+    baseUrl: env.XAI_ENDPOINT,
+  },
+
   // Telemetry configuration
   telemetry: {
     enabled: env.ENABLE_TELEMETRY,

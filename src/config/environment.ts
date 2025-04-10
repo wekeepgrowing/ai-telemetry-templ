@@ -15,8 +15,21 @@ const envSchema = z.object({
 
   // OpenAI settings
   OPENAI_API_KEY: z.string().min(1, 'OpenAI API key is required'),
-  OPENAI_MODEL: z.string().default('gpt-4o'),
+  OPENAI_MODEL: z.string().default('gpt-4o-mini'),
   OPENAI_ENDPOINT: z.string().url().default('https://api.openai.com/v1'),
+
+  // Anthropic settings
+  ANTHROPIC_API_KEY: z.string().optional(),
+  ANTHROPIC_MODEL: z.string().default('claude-3-5-haiku-latest'),
+
+  // Google Gemini settings
+  GOOGLE_GENERATIVE_AI_API_KEY: z.string().optional(),
+  GOOGLE_MODEL: z.string().default('gemini-2.0-flash-lite'),
+
+  // Grok settings
+  XAI_API_KEY: z.string().optional(),
+  XAI_MODEL: z.string().default('grok-2-1212'),
+  XAI_ENDPOINT: z.string().url().optional(),
 
   // Other settings
   CONTEXT_SIZE: z.string().transform(val => parseInt(val, 10)).default('128000'),
@@ -42,7 +55,7 @@ function loadEnv() {
   } catch (error) {
     if (error instanceof z.ZodError) {
       const formattedErrors = error.format();
-      console.error('Environment validation failed:', JSON.stringify(formattedErrors, null, 2));
+      process.stderr.write(`[ERROR] Environment validation failed: ${JSON.stringify(formattedErrors, null, 2)}\n`);
       process.exit(1);
     }
     throw error;

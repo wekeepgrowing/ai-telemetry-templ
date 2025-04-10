@@ -5,10 +5,23 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "demo:ai": "tsx --env-file=.env src/examples/ai-telemetry-demo.ts",
-    "demo:stream": "tsx --env-file=.env src/examples/ai-stream-telemetry-demo.ts console",
+    "build:executor": "tsc && chmod +x dist/json-executor.js",
+    "build:sea": "node scripts/build-sea.js",
+    "build:sea:sudo": "./scripts/run-sea-build.sh",
+    "demo": "tsx --env-file=.env src/ai/examples.ts",
     "dev": "tsx watch --env-file=.env src/examples/ai-telemetry-demo.ts",
     "test": "node --test src/**/*.test.ts"
+  },
+  "bin": {
+    "ai-executor": "dist/json-executor.js"
+  },
+  "pkg": {
+    "targets": [
+      "node23-linux-x64",
+      "node23-macos-x64",
+      "node23-win-x64"
+    ],
+    "outputPath": "bin"
   },
   "keywords": [
     "ai",
@@ -23,8 +36,10 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.0",
-    "@ai-sdk/google": "^1.2.1",
-    "@ai-sdk/openai": "^1.3.0",
+    "@ai-sdk/google": "^1.2.3",
+    "@ai-sdk/mistral": "^1.2.1",
+    "@ai-sdk/openai": "^1.3.4",
+    "@ai-sdk/xai": "^1.2.3",
     "@opentelemetry/api-logs": "^0.200.0",
     "@opentelemetry/auto-instrumentations-node": "^0.57.0",
     "@opentelemetry/instrumentation": "^0.200.0",
