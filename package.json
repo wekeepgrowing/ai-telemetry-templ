@@ -1,8 +1,9 @@
 {
   "name": "ai-telemetry-template",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Template for AI telemetry integration with Langfuse",
   "main": "dist/index.js",
+  "repository": "https://github.com/wekeepgrowing/ai-telemetry-templ.git",
   "scripts": {
     "build": "tsc",
     "build:executor": "tsc && chmod +x dist/json-executor.js",
@@ -29,10 +30,10 @@
     "langfuse",
     "opentelemetry"
   ],
-  "author": "",
+  "author": "aground5",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.0",

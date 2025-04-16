@@ -80,9 +80,10 @@ function createModelObject(modelString?: string): LanguageModelV1 {
  * @param variables 프롬프트에 주입할 변수들
  * @param operationName 텔레메트리에 기록될 작업 이름
  * @param temperature 생성 다양성 조절 (기본값: 0.7)
+ * @param maxTokens 생성 최대 토큰 수 (기본값: 2048)
  * @param model 사용할 모델 (provider:model 형식, e.g. "openai:gpt-4o", "google:gemini-1.5-pro")
  * @param metadata 추가 메타데이터
- * @returns 생성된 텍스트 스트림
+ * @returns AI SDK의 streamText 결과 객체 (textStream, pipeDataStreamToResponse 등 포함)
  */
 export async function executePrompt(
   traceManager: TraceManager,
@@ -90,9 +91,10 @@ export async function executePrompt(
   variables: Record<string, any>,
   operationName: string,
   temperature: number = 0.7,
+  maxTokens: number = 2048,
   model?: string,
   metadata: Record<string, any> = {}
-): Promise<ReadableStream<string>> {
+) {
   try {
     const promptClient = await langfuse.getPrompt(promptName, undefined, {
       type: "chat"
@@ -107,6 +109,7 @@ export async function executePrompt(
       traceManager,
       operationName,
       temperature,
+      maxTokens,
       metadata: {
         ...metadata,
         modelString: model,
@@ -116,7 +119,7 @@ export async function executePrompt(
       }
     });
 
-    return result.textStream;
+    return result;
   } catch (error) {
     logger.error('프롬프트 가져오기 오류:', { error });
     throw error;
@@ -132,7 +135,7 @@ export async function executePrompt(
  * @param operationName 작업 이름
  * @param model 사용할 모델 (provider:model 형식)
  * @param metadata 메타데이터
- * @returns 생성된 텍스트 스트림
+ * @returns AI SDK의 streamText 결과 객체 (textStream, pipeDataStreamToResponse 등 포함)
  */
 export async function streamGeneratedText(
   traceManager: TraceManager,
@@ -141,7 +144,7 @@ export async function streamGeneratedText(
   operationName: string,
   model?: string,
   metadata: Record<string, any> = {}
-): Promise<ReadableStream<string>> {
+) {
   try {
     const messages: CoreMessage[] = [];
 
@@ -170,7 +173,7 @@ export async function streamGeneratedText(
       }
     });
 
-    return result.textStream;
+    return result;
   } catch (error) {
     logger.error('텍스트 생성 오류:', { error });
     throw error;

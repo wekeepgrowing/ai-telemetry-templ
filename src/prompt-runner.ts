@@ -12,6 +12,7 @@ import { z } from 'zod';
 import { createTraceManager } from './ai/telemetry';
 import { logger } from './utils/logger';
 import { executePrompt, streamGeneratedText } from './prompts';
+import { StreamTextResult, ToolSet } from 'ai';
 
 // Schema for the input JSON
 const PromptRequestSchema = z.object({
@@ -40,7 +41,10 @@ const PromptRequestSchema = z.object({
   userId: z.string().optional(),
 
   // Optional session ID for Langfuse telemetry
-  sessionId: z.string().optional()
+  sessionId: z.string().optional(),
+
+  // Optional max tokens for generation
+  maxTokens: z.number().optional()
 });
 
 type PromptRequest = z.infer<typeof PromptRequestSchema>;
@@ -88,7 +92,7 @@ async function executePromptHandler(request: PromptRequest): Promise<void> {
       sessionId: request.sessionId
     });
 
-    let stream: ReadableStream<string>;
+    let stream: StreamTextResult<ToolSet, unknown>;
 
     // Handle direct streaming with system prompt (backwards compatibility)
     if (request.systemPrompt) {
@@ -112,6 +116,7 @@ async function executePromptHandler(request: PromptRequest): Promise<void> {
         request.variables,
         request.operationName || `execute-${request.promptName}`,
         request.temperature,
+        request.maxTokens,
         request.model,
         {
           model: request.model,
@@ -123,7 +128,7 @@ async function executePromptHandler(request: PromptRequest): Promise<void> {
     }
 
     // Stream directly to stdout without converting to Node.js stream
-    await streamToStdout(stream);
+    await streamToStdout(stream.textStream);
 
     // Finish the trace after streaming completes
     await traceManager.finishTrace('success');
